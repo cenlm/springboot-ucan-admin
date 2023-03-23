@@ -1,0 +1,63 @@
+element.style {
+	height: 292.6px;
+	background-color: #5B54B1;
+}
+
+.layui-btn {
+	background-color: #5B54B1;
+}
+
+.layui-form-onswitch {
+	border-color: #5B54B1;
+	background-color: #5B54B1;
+}
+
+.layui-form-radioed, .layui-form-radioed>i, .layui-form-radio:hover * {
+    color: #5B54B1;
+}
+
+.layui-form-checked[lay-skin="primary"] i {
+    border-color: #5B54B1 !important;
+    background-color: #5B54B1;
+}
+
+.layui-tab-brief>.layui-tab-title .layui-this {
+	color: #5B54B1;
+	font-weight:bold;
+}
+
+.layui-tab-brief>.layui-tab-title .layui-this:after, .layui-tab-brief>.layui-tab-more li.layui-this:after
+	{
+	border: none;
+	border-radius: 0;
+	border-bottom: 2px solid #5B54B1;
+}
+
+.layui-laypage .layui-laypage-curr .layui-laypage-em {
+	background-color: #5B54B1;
+}
+
+.layui-layer-btn .layui-layer-btn0 {
+	border-color: #5B54B1;
+	background-color: #5B54B1;
+	color: #fff;
+}
+
+body .authz-class .layui-layer-title {
+	background: #5B54B1;
+	color: #fff;
+	border: none;
+}
+
+body .authz-class .layui-layer-btn {
+	border-top: 1px solid #E9E7E7
+}
+
+body .authz-class .layui-layer-btn a {
+	background: #5B54B1;
+	border: none;
+}
+
+body .authz-class .layui-layer-btn .layui-layer-btn1 {
+	background: #F1F1F1;
+}

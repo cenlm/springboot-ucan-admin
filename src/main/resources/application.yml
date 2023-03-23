@@ -1,0 +1,50 @@
+server:
+  servlet:
+    context-path: /ucan-admin
+
+spring:
+  profiles:
+    active: dev
+   
+    
+  autoconfigure:
+    exclude:  com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure # 去除druid配置
+      
+  mvc:
+    servlet:
+      path: /
+#    static-path-pattern: /**
+   
+    view:
+      prefix: /templates/
+      suffix: .ftl
+      
+  freemarker:
+    cache: false
+    charset: UTF-8
+    allow-request-override: false
+    check-template-location: true
+    content-type: text/html; charset=utf-8
+    expose-request-attributes: true
+    expose-session-attributes: true
+    suffix: .ftl
+    template-loader-path:
+    - classpath:/templates/
+    request-context-attribute: request
+    
+  main:
+    allow-circular-references: true    
+      
+logging:
+  config: classpath:log4j2.xml
+  level:
+    root: info
+    javax.activation: info
+    org.apache.catalina: INFO
+    org.apache.commons.beanutils.converters: INFO
+    org.apache.coyote.http11.Http11Processor: INFO
+    org.apache.http: INFO
+    org.apache.tomcat: INFO
+    org.springframework: INFO
+    com.chinamobile.cmss.bdpaas.resource.monitor: DEBUG
+    

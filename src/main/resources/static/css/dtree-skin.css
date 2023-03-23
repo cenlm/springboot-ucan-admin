@@ -1,0 +1,10 @@
+/* authz主题风格*/
+.dtree-authz-item-this{background-color: #E3E6F2!important;font-size:13px;color:#5B54B1;font-weight:bold;} /* 当前选中行样式*/
+.dtree-authz-item:hover{background-color: #f2f2f2!important;} /* 行悬停样式*/
+.dtree-authz-item cite{font-size:13px!important;} /* 行文字样式*/
+.dtree-authz-item:hover cite{color:#FF5722!important;} /* 行悬停文字样式*/
+.dtree-authz-dtreefont{font-size: 13px!important;color:#292854!important;} /* 一级图标、二级图标、复选框样式*/
+.dtree-authz-ficon{color:#292854!important;}  /*一级图标特定样式*/
+.dtree-authz-icon{color:#3C387B!important;}  /*二级图标特定样式*/
+.dtree-authz-checkbox:hover{color:#46408D!important;}  /*复选框悬停样式*/
+.dtree-authz-choose{color:#4D489F!important;} /* 复选框选中样式*/

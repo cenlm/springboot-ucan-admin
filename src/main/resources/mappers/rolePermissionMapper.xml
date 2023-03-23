@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ucan.dao.RolePermissionMapper">
+
+	<resultMap id="permissionMap"
+		type="com.ucan.entity.Permission">
+		<id property="permissionId" column="permission_id" />
+		<result property="permissionName" column="permission_name" />
+		<result property="permissionCode" column="permission_code" />
+		<result property="createTime" column="create_time" />
+		<result property="modifyTime" column="modify_time" />
+		<result property="remarks" column="remarks" />
+	</resultMap>
+
+	<resultMap id="rolePermissionMap"
+		type="com.ucan.entity.RolePermission">
+		<id property="roleId" column="role_id" />
+		<id property="permissionId" column="permission_id" />
+		<id property="sysCode" column="sys_code" />
+		<association property="permission"
+			resultMap="permissionMap"></association>
+	</resultMap>
+
+	<insert id="insert"
+		parameterType="com.ucan.entity.RolePermission">
+		insert into
+		role_permission(role_id,permission_id,sys_code)values(#{roleId},#{permissionId},#{sysCode})
+	</insert>
+
+	<insert id="insertBatch">
+		insert into role_permission(role_id,permission_id,sys_code)values
+		<foreach collection="list" separator="," item="item">
+			(#{item.roleId},#{item.permissionId},#{item.sysCode})
+		</foreach>
+	</insert>
+
+	<delete id="deleteBatch">
+		delete from role_permission where (role_id,permission_id) in
+		<foreach collection="list" item="item" index="index"
+			separator="," open="(" close=")">
+			(#{item.roleId},#{item.permissionId})
+		</foreach>
+	</delete>
+
+	<delete id="deleteRolePermissionByRoleIds">
+		delete from role_permission where role_id in
+		<foreach collection="list" open="(" separator="," close=")"
+			item="roleId">
+			#{roleId}
+		</foreach>
+	</delete>
+
+	<delete id="delete">
+		delete from role_permission
+		<trim prefix="WHERE" prefixOverrides="AND |OR ">
+			<if test="roleId!=null">
+				role_id=#{roleId}
+			</if>
+			<if test="permissionId!=null">
+				AND permission_id=#{permissionId}
+			</if>
+		</trim>
+	</delete>
+
+	<delete id="deleteByPermissionIds">
+		delete from role_permission where permission_id in
+		<foreach collection="list" open="(" separator="," close=")"
+			item="permissionId">
+			#{permissionId}
+		</foreach>
+	</delete>
+
+	<update id="update">
+		update role_permission
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="roleId!=null">role_id=#{roleId},</if>
+			<if test="permissionId!=null">permission_id=#{permissionId},</if>
+			<if test="sysCode!=null">sys_code=#{sysCode}</if>
+		</trim>
+		where role_id=#{roleId} and permission_id=#{permissionId}
+	</update>
+
+	<select id="queryPermissionsByRoleId"
+		resultMap="rolePermissionMap">
+		select rp.role_id role_id,rp.permission_id
+		permission_id,p.permission_code
+		permission_code,p.permission_name
+		permission_name from role_permission
+		rp
+		JOIN permissions p on
+		p.permission_id=rp.permission_id
+		where rp.role_id=#{roleId}
+	</select>
+
+	<select id="queryPermissionsIdByRoleId"
+		resultMap="rolePermissionMap">
+		select role_id,permission_id from
+		role_permission where
+		role_id=#{roleId}
+	</select>
+
+	<select id="queryByPage" resultMap="rolePermissionMap">
+		select
+		rp.role_id,rp.permission_id,pms.permission_name,pms.create_time,pms.remarks
+		from role_permission rp left join permissions pms
+		on
+		rp.permission_id=pms.permission_id
+		where
+		rp.role_id=#{roleId}
+	</select>
+
+	<select id="queryRolePermissionCounts" resultType="int">
+		select count(*) from role_permission
+		<trim prefix="WHERE" prefixOverrides="AND |OR ">
+			<if test="roleId!=null">
+				role_id=#{roleId}
+			</if>
+			<if test="permissionId!=null">
+				AND permission_id=#{permissionId}
+			</if>
+		</trim>
+	</select>
+
+	<select id="queryRoleIdByPermissionIds"
+		resultMap="rolePermissionMap">
+		select distinct(role_id) from role_permission where permission_id in
+		<foreach collection="list" open="(" separator="," close=")"
+			item="permissionId">
+			#{permissionId}
+		</foreach>
+	</select>
+
+	<select id="queryCountByPermissionIds" resultType="int">
+		select count(*) from role_permission where permission_id in
+		<foreach collection="list" open="(" separator="," close=")"
+			item="permissionId">
+			#{permissionId}
+		</foreach>
+	</select>
+
+	<select id="queryPermissionIdsByRoleIds"
+		resultMap="rolePermissionMap">
+		select distinct(permission_id) from role_permission where role_id in
+		<foreach collection="list" open="(" separator="," close=")"
+			item="roleId">
+			#{roleId}
+		</foreach>
+	</select>
+
+	<select id="getRolePermissionCountsByRoleIds" resultType="int">
+		select count(*) from role_permission where role_id in
+		<foreach collection="list" open="(" separator="," close=")"
+			item="roleId">
+			#{roleId}
+		</foreach>
+	</select>
+
+</mapper>

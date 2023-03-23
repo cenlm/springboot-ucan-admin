@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ucan.dao.UserMapper">
+	<cache />
+	<resultMap id="userMap" type="com.ucan.entity.User">
+		<id property="userId" column="user_id" />
+		<result property="userName" column="username" />
+		<result property="password" column="password" />
+		<result property="userAlias" column="user_alias" />
+		<result property="sex" column="sex" />
+		<result property="cellPhoneNumber" column="cell_phone_number" />
+		<result property="address" column="address" />
+		<result property="entryDate" column="entry_date" />
+		<result property="lastLogin" column="last_login" />
+		<result property="email" column="email" />
+		<result property="isSuper" column="is_super" />
+		<result property="isEnable" column="is_enable" />
+		<result property="createTime" column="create_time" />
+		<result property="modifyTime" column="modify_time" />
+		<result property="remarks" column="remarks" />
+		<association property="post"
+			javaType="com.ucan.entity.Post">
+			<result property="postName" column="post_name" />
+		</association>
+	</resultMap>
+
+	<insert id="insert" parameterType="com.ucan.entity.User">
+		insert into
+		users(user_id,username,password,email,create_time,remarks,user_alias,is_enable,sex,cell_phone_number,address,is_super)values(#{userId},#{userName},#{password},#{email},#{createTime},#{remarks},#{userAlias},#{isEnable},#{sex},#{cellPhoneNumber},#{address},#{isSuper})
+	</insert>
+
+	<insert id="addUserPostMapping"
+		parameterType="java.util.HashMap">
+		insert into
+		user_post(post_id,user_id)values(#{postId},#{userId})
+	</insert>
+
+	<delete id="deleteById">
+		delete from users where is_super!=1 and
+		user_id=#{id}
+	</delete>
+
+	<delete id="deleteByIds">
+		delete from users where user_id in
+		<foreach collection="list" open="(" separator="," close=")"
+			item="userId">
+			#{userId}
+		</foreach>
+		and is_super!=1
+	</delete>
+
+	<delete id="deleteUserPostByUserId">
+		delete from user_post where user_id=#{userId}
+	</delete>
+
+	<delete id="deleteUserPostByUserIds">
+		delete from user_post where user_id in
+		<foreach collection="list" open="(" separator="," close=")"
+			item="userId">
+			#{userId}
+		</foreach>
+	</delete>
+
+	<select id="queryUserPostCountByUserId" resultType="int">
+		select
+		count(*)
+		from user_post where user_id=#{userId}
+	</select>
+
+	<select id="queryUserPostCountByUserIds" resultType="int">
+		select
+		count(*)
+		from user_post where user_id in
+		<foreach collection="list" open="(" separator="," close=")"
+			item="userId">
+			#{userId}
+		</foreach>
+	</select>
+
+	<update id="update">
+		update users
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="userName!=null">username=#{userName},</if>
+			<if test="password!=null">password=#{password},</if>
+			<if test="userAlias!=null">user_alias=#{userAlias},</if>
+			<if test="sex!=null">sex=#{sex},</if>
+			<if test="cellPhoneNumber!=null">cell_phone_number=#{cellPhoneNumber},</if>
+			<if test="address!=null">address=#{address},</if>
+			<if test="entryDate!=null">entry_date=#{entryDate},</if>
+			<if test="lastLogin!=null">last_login=#{lastLogin},</if>
+			<if test="isSuper!=null">is_super=#{isSuper},</if>
+			<if test="email!=null">email=#{email},</if>
+			<if test="modifyTime!=null">modify_time=#{modifyTime},</if>
+			<if test="isEnable!=null">is_enable=#{isEnable},</if>
+			<if test="remarks!=null">remarks=#{remarks}</if>
+		</trim>
+		where user_id=#{userId}
+	</update>
+
+	<update id="updatePassword" parameterType="java.util.Map">
+		update users set
+		password=#{newPassword} where
+		user_id=#{userId}
+	</update>
+
+	<select id="queryByPasswordAndUserId" resultType="int">
+		select count(*)
+		from users where user_id=#{userId} and password=#{password}
+	</select>
+
+
+	<select id="queryById" resultMap="userMap">
+		select
+		u.user_id,u.username,p.post_name
+		post_name,u.user_alias,u.sex,u.cell_phone_number,u.address,u.entry_date,u.last_login,u.is_super,u.email,u.create_time,u.modify_time,u.is_enable,u.remarks
+		from users u
+		join user_post up on u.user_id=up.user_id
+		join post p on
+		p.post_id=up.post_id
+		where u.user_id=#{userId}
+		union
+		select
+		u.user_id,u.username,'无' post_name,u.user_alias,u.sex,u.cell_phone_number,u.address,u.entry_date,u.last_login,u.is_super,u.email,u.create_time,u.modify_time,u.is_enable,u.remarks
+		from users u
+		where u.user_id=#{userId}
+	</select>
+
+	<select id="queryByName" resultMap="userMap">
+		select * from users where
+		username=#{userName}
+	</select>
+
+
+	<select id="queryByPage" resultMap="userMap">
+		select
+		user_id,username,user_alias,sex,cell_phone_number,address,entry_date,last_login,is_super,email,create_time,modify_time,modify_time,is_enable,remarks
+		from
+		users
+		<trim prefix="WHERE" prefixOverrides="AND |OR ">
+			<if test="userId!=null">
+				user_id=#{userId}
+			</if>
+			<if test="userId!=null">
+				OR username=#{userName}
+			</if>
+		</trim>
+	</select>
+
+	<select id="queryUserByPage" resultMap="userMap">
+		select
+		user_id,username,user_alias,sex,cell_phone_number,address,entry_date,last_login,is_super,email,create_time,modify_time,is_enable,remarks
+		from
+		users
+		<trim prefix="WHERE" prefixOverrides="AND |OR ">
+			<if test="isEnable!=null">
+				is_enable=#{isEnable}
+			</if>
+			<if test="isSuper!=null">
+				and is_super=#{isSuper}
+			</if>
+		</trim>
+	</select>
+
+	<select id="queryUsersByOrgIdsPageWithMap"
+		parameterType="java.util.HashMap" resultMap="userMap">
+		SELECT u.user_id user_id,u.username username,'无' post_name,u.sex
+		sex,u.cell_phone_number
+		cell_phone_number,u.email email,u.is_enable
+		is_enable,u.is_super
+		is_super from
+		user_organization
+		uo JOIN users u ON
+		uo.user_id=u.user_id
+		WHERE
+		uo.org_id in
+		<foreach collection="orgIds" open="(" separator="," close=")"
+			item="orgId"> #{orgId} </foreach>
+		<if test="username 
+			!= null and username != ''"> AND u.username like CONCAT('%',#{username},'%')
+		</if>
+		<if test="isEnable != null and isEnable != ''"> AND u.is_enable = #{isEnable}
+		</if>
+		union
+		SELECT u.user_id user_id,u.username username,p.post_name
+		post_name,u.sex sex,u.cell_phone_number
+		cell_phone_number,u.email
+		email,u.is_enable is_enable,u.is_super
+		is_super from
+		user_organization
+		uo JOIN users u ON uo.user_id=u.user_id
+		join user_post up on
+		up.user_id=u.user_id
+		join post p on p.post_id=up.post_id
+		WHERE
+		uo.org_id
+		in
+		<foreach collection="orgIds" open="(" separator="," close=")"
+			item="orgId"> #{orgId} </foreach>
+		<if test="username 
+			!= null and username != ''"> AND u.username like CONCAT('%',#{username},'%')
+		</if>
+		<if test="isEnable != null and isEnable != ''"> AND u.is_enable = #{isEnable}
+		</if>
+		UNION
+		SELECT u1.user_id,u1.username username,p.post_name
+		post_name,u1.sex sex,u1.cell_phone_number
+		cell_phone_number,u1.email
+		email,u1.is_enable is_enable,u1.is_super
+		is_super
+		from user_post
+		up JOIN
+		users u1 ON up.user_id=u1.user_id
+		join post p on p.post_id=up.post_id
+		WHERE
+		up.post_id
+		in(SELECT
+		post_id FROM
+		post where org_id
+		in
+		<foreach collection="orgIds" open="(" separator="," close=")"
+			item="orgId">
+			#{orgId}
+		</foreach>
+		<if test="username != null and username != ''">
+			AND u1.username like "%"#{username}"%"
+		</if>
+		<if test="isEnable != null and isEnable != ''">
+			AND u1.is_enable = #{isEnable}
+		</if>
+		) limit #{page.beginRow},#{page.pageSize}
+	</select>
+
+	<select id="queryUsersCountsByOrgIds" resultType="int"
+		parameterType="java.util.HashMap">
+		select count(*) from (
+		SELECT u.username username from
+		user_organization uo JOIN
+		users u ON uo.user_id=u.user_id WHERE
+		uo.org_id in
+		<foreach collection="orgIds" open="(" separator="," close=")"
+			item="orgId"> #{orgId} </foreach>
+		<if test="username 
+			!= null and username != ''"> AND u.username like CONCAT('%',#{username},'%')
+		</if>
+		<if test="isEnable != null and isEnable != ''"> AND u.is_enable = #{isEnable}
+		</if>
+		UNION
+		SELECT u1.username username
+		from user_post up JOIN users u1 ON
+		up.user_id=u1.user_id WHERE up.post_id
+		in(SELECT post_id FROM post
+		where
+		org_id
+		in
+		<foreach collection="orgIds" open="(" separator="," close=")"
+			item="orgId">
+			#{orgId}
+		</foreach>
+		<if test="username != null and username != ''">
+			AND u1.username like CONCAT('%',#{username},'%')
+		</if>
+		<if test="isEnable != null and isEnable != ''">
+			AND u1.is_enable = #{isEnable}
+		</if>
+		)) u2
+	</select>
+
+	<select id="queryUsersByPostId"
+		parameterType="java.util.HashMap" resultMap="userMap">
+		SELECT u1.user_id user_id,u1.username username,u1.sex
+		sex,u1.cell_phone_number
+		cell_phone_number,u1.email email,u1.is_enable
+		is_enable,u1.is_super is_super,p.post_name post_name
+		from user_post
+		up
+		JOIN users u1 ON up.user_id=u1.user_id
+		join post p on
+		p.post_id=up.post_id
+		WHERE up.post_id
+		= #{postId}
+		<if test="username != null and username != ''">
+			AND u1.username like CONCAT('%',#{username},'%')
+		</if>
+		<if test="isEnable != null and isEnable != ''">
+			AND u1.is_enable = #{isEnable}
+		</if>
+		limit #{page.beginRow},#{page.pageSize}
+	</select>
+
+	<select id="queryCountByPostId"
+		parameterType="java.util.HashMap" resultType="int">
+		SELECT count(*) from user_post
+		up JOIN users u1 ON
+		up.user_id=u1.user_id WHERE up.post_id
+		= #{postId}
+		<if test="username != null and username != ''">
+			AND u1.username like CONCAT('%',#{username},'%')
+		</if>
+		<if test="isEnable != null and isEnable != ''">
+			AND u1.is_enable = #{isEnable}
+		</if>
+	</select>
+
+	<select id="queryUserDetail" resultMap="userMap">
+		SELECT u.username
+		username,u.email email,u.cell_phone_number cell_phone_number
+		,u.address address,u.user_alias
+		user_alias,concat(o.org_name,'-',p.post_name) post_name,u.create_time
+		create_time,u.modify_time modify_time,
+		u.entry_date
+		entry_date,u.last_login last_login,u.is_enable is_enable,u.sex
+		sex,u.remarks remarks
+		from users u
+		JOIN user_post up on
+		u.user_id=up.user_id
+		JOIN post p on up.post_id=p.post_id
+		JOIN
+		organization o ON o.org_id=p.org_id
+		where u.user_id=#{userId}
+		union
+		SELECT u.username username,u.email email,u.cell_phone_number
+		cell_phone_number
+		,u.address address,u.user_alias user_alias,'无'
+		post_name,u.create_time
+		create_time,u.modify_time modify_time,
+		u.entry_date entry_date,u.last_login last_login,u.is_enable
+		is_enable,u.sex
+		sex,u.remarks remarks
+		from users u
+		where
+		u.user_id=#{userId}
+	</select>
+</mapper>

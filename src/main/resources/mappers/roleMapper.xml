@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ucan.dao.RoleMapper">
+	<cache />
+	<resultMap id="roleMap" type="com.ucan.entity.Role">
+		<id property="roleId" column="role_id" />
+		<result property="roleName" column="role_name" />
+		<result property="roleCode" column="role_code" />
+		<result property="parentId" column="parent_id" />
+		<result property="position" column="position" />
+		<result property="createTime" column="createTime" />
+		<result property="modifyTime" column="modify_time" />
+		<result property="remarks" column="remarks" />
+		<result property="sysCode" column="sys_code" />
+		<result property="icon" column="icon" />
+		<result property="isSuper" column="is_super" />
+
+	</resultMap>
+
+	<resultMap id="mutexRoleMap" type="com.ucan.entity.MutexRole">
+		<id property="roleId" column="role_id" />
+		<id property="mutexRoleId" column="mutex_role_id" />
+		<result property="roleName" column="role_name" />
+		<result property="mutexRoleName" column="mutex_role_name" />
+		<result property="sysCode" column="sys_code" />
+
+	</resultMap>
+
+	<insert id="insert" parameterType="com.ucan.entity.Role">
+		insert into
+		roles(role_id,role_name,role_code,parent_id,position,create_time,remarks,icon,sys_code,is_super)values(#{roleId},#{roleName},#{roleCode},#{parentId},#{position},#{createTime},#{remarks},#{icon},#{sysCode},#{isSuper})
+	</insert>
+
+	<insert id="insertMutexRole"
+		parameterType="com.ucan.entity.MutexRole">
+		insert into
+		mutex_roles(role_id,mutex_role_id,sys_code)values(#{roleId},#{mutexRoleId},#{sysCode})
+	</insert>
+
+	<select id="getMutexRolesByPage" resultMap="mutexRoleMap">
+		SELECT mr.role_id
+		role_id,r.role_name role_name,mr.mutex_role_id
+		mutex_role_id,r1.role_name mutex_role_name from mutex_roles mr
+		JOIN
+		roles r on mr.role_id=r.role_id
+		JOIN roles r1 on
+		mr.mutex_role_id=r1.role_id
+		<where>
+			<if test="roleId!=null and roleId!=''">
+				mr.role_id=#{roleId} or mr.mutex_role_id=#{roleId}
+			</if>
+		</where>
+	</select>
+
+	<select id="getMutexRolesByRoleId" resultMap="mutexRoleMap">
+		SELECT mr.role_id
+		role_id,r.role_name role_name,mr.mutex_role_id
+		mutex_role_id,r1.role_name mutex_role_name from mutex_roles mr
+		JOIN
+		roles r on mr.role_id=r.role_id
+		JOIN roles r1 on
+		mr.mutex_role_id=r1.role_id
+		<where>
+			<if test="roleId!=null and roleId!=''">
+				mr.role_id=#{roleId} or mr.mutex_role_id=#{roleId}
+			</if>
+		</where>
+	</select>
+
+	<select id="queryBasicRole" resultType="com.ucan.entity.Role">
+		select role_id
+		roleId,role_name roleName,is_super isSuper
+		from roles where is_super=2
+	</select>
+
+	<select id="queryByDubbleRoleId" resultMap="mutexRoleMap">
+		select * from
+		mutex_roles where role_id=#{roleId} and mutex_role_id=#{mutexRoleId}
+		union
+		select * from mutex_roles where role_id=#{mutexRoleId} and
+		mutex_role_id=#{roleId}
+	</select>
+	<delete id="deleteById">
+		delete from roles where role_id=#{id}
+	</delete>
+
+	<select id="queryById" resultType="com.ucan.entity.Role">
+		select role_id
+		roleId,role_name roleName,role_code roleCode,position,is_super isSuper from roles where
+		role_id=#{roleId}
+	</select>
+
+	<delete id="deleteMutexRoleById">
+		delete from mutex_roles where (role_id=#{roleId} and
+		mutex_role_id=#{mutexRoleId}) or (role_id=#{mutexRoleId} and
+		mutex_role_id=#{roleId})
+	</delete>
+	<!-- 删除角色时，连同已配置互斥角色一起删除 -->
+	<delete id="deleteMutexRoleByRoleIds">
+		delete from mutex_roles where
+		role_id in
+		<foreach collection="list" open="(" separator="," close=")"
+			item="roleId">
+			#{roleId}
+		</foreach>
+		or
+		mutex_role_id in
+		<foreach collection="list" open="(" separator="," close=")"
+			item="roleId">
+			#{roleId}
+		</foreach>
+
+	</delete>
+
+	<delete id="deleteRoleByRoleIds">
+		delete from roles where role_id in
+		<foreach collection="list" open="(" separator="," close=")"
+			item="roleId">
+			#{roleId}
+		</foreach>
+	</delete>
+
+	<update id="update">
+		update roles
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="roleName!=null">role_name=#{roleName},</if>
+			<if test="roleCode!=null">role_code=#{roleCode},</if>
+			<if test="parentId!=null">parent_id=#{parentId},</if>
+			<if test="position!=null">position=#{position},</if>
+			<if test="modifyTime!=null">modify_time=#{modifyTime},</if>
+			<if test="sysCode!=null">sys_code=#{sysCode},</if>
+			<if test="icon!=null">icon=#{icon},</if>
+			<if test="remarks!=null">remarks=#{remarks}</if>
+		</trim>
+		where role_id=#{roleId}
+	</update>
+
+	<select id="queryRoleNameById" resultType="java.lang.String">
+		select role_name from
+		roles where role_id=#{roleId}
+	</select>
+
+	<select id="queryAllRoles" resultMap="roleMap">
+		select * from roles order
+		by position asc
+	</select>
+
+
+
+	<select id="queryByPage" resultMap="roleMap">
+		select * from roles
+		<trim prefix="WHERE" prefixOverrides="AND |OR ">
+			<if test="roleId!=null">
+				role_id=#{roleId}
+			</if>
+			<if test="roleId!=null">
+				OR role_name=#{roleName}
+			</if>
+		</trim>
+	</select>
+
+	<select id="getRoleIdByParentId" resultMap="roleMap">
+		select role_id from
+		roles where parent_id=#{parentId}
+	</select>
+
+</mapper>

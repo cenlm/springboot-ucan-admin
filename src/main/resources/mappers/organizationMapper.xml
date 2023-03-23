@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ucan.dao.OrganizationMapper">
+	<cache />
+	<resultMap id="organizationMap"
+		type="com.ucan.entity.Organization">
+		<id property="orgId" column="org_id" />
+		<result property="orgName" column="org_name" />
+		<result property="parentId" column="parent_id" />
+		<result property="position" column="position" />
+		<result property="orgType" column="org_type" />
+		<result property="orgCode" column="org_code" />
+		<result property="icon" column="icon" />
+		<result property="isSuper" column="is_super" />
+	</resultMap>
+
+	<insert id="insert" parameterType="com.ucan.entity.Organization">
+		insert into
+		organization(org_id,org_name,parent_id,position,org_type,org_code,icon,is_super)values(#{orgId},#{orgName},#{parentId},#{position},#{orgType},#{orgCode},#{icon},#{isSuper})
+	</insert>
+
+	<update id="update">
+		update organization
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="orgName!=null">org_name=#{orgName},</if>
+			<if test="orgType!=null">org_type=#{orgType},</if>
+			<if test="orgCode!=null">org_code=#{orgCode},</if>
+			<if test="parentId!=null">parent_id=#{parentId},</if>
+			<if test="icon!=null">icon=#{icon},</if>
+			<if test="position!=null">position=#{position}</if>
+		</trim>
+		where org_id=#{orgId}
+	</update>
+
+	<select id="queryAllOrganizations" resultMap="organizationMap">
+		select * from
+		organization order by position asc
+	</select>
+
+	<select id="queryOrgIdsByParentId" resultMap="organizationMap">
+		select org_id from
+		organization where parent_id=#{parentId}
+	</select>
+
+	<select id="getOrgNameById" resultType="java.lang.String">
+		select org_name from
+		organization where org_id=#{orgId}
+	</select>
+
+	<delete id="delete">
+		delete from organization where org_id=#{orgId}
+	</delete>
+</mapper>

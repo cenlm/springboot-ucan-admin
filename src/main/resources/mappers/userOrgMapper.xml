@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ucan.dao.UserOrgMapper">
+
+	<resultMap id="userOrgMap"
+		type="com.ucan.entity.UserOrganization">
+		<id property="userId" column="user_id" />
+		<id property="orgId" column="org_id" />
+		<result property="orgType" column="org_type" />
+		<association property="user"
+			javaType="com.ucan.entity.User">
+			<result property="userName" column="username" />
+			<result property="email" column="email" />
+			<result property="cellPhoneNumber" column="cell_phone_number" />
+			<result property="remarks" column="remarks" />
+		</association>
+		<association property="organization"
+			javaType="com.ucan.entity.Organization">
+			<result property="orgName" column="org_name" />
+		</association>
+	</resultMap>
+
+	<insert id="insert"
+		parameterType="com.ucan.entity.UserOrganization">
+		insert into
+		user_organization(user_id,org_id,org_type)values(#{userId},#{orgId},#{orgType})
+	</insert>
+
+
+	<insert id="insertBatch">
+		insert into user_organization(user_id,org_id,org_type)values
+		<foreach collection="list" separator="," item="item">
+			(#{item.userId},#{item.orgId},#{item.orgType})
+		</foreach>
+	</insert>
+
+	<delete id="deleteBatch">
+		delete from user_organization where (user_id,org_id) in
+		<foreach collection="list" item="item" index="index"
+			separator="," open="(" close=")">
+			(#{item.userId},#{item.orgId})
+		</foreach>
+	</delete>
+
+	<delete id="deleteByIds">
+		delete from user_organization where user_id in
+		<foreach collection="list" item="userId" index="index"
+			separator="," open="(" close=")">
+			#{userId}
+		</foreach>
+	</delete>
+
+	<select id="getUserOrgByUserId" resultMap="userOrgMap">
+		select * from
+		user_organization
+		where user_id=#{userId}
+	</select>
+
+	<select id="getCountsByUserIds" resultType="int">
+	select count(*) from
+	user_organization
+	where user_id in
+		<foreach collection="list" item="userId" index="index"
+			separator="," open="(" close=")">
+			#{userId}
+		</foreach>
+	</select>
+
+	<select id="getUserOrgCountByOrgId" resultType="int">
+		select count(*)
+		from user_organization where org_id=#{orgId}
+	</select>
+
+	<select id="getUserOrgByPage" resultMap="userOrgMap">
+		SELECT u.username
+		username,u.cell_phone_number cell_phone_number,u.email
+		email,u.remarks
+		remarks,o.org_name org_name from user_organization uo
+		JOIN users u ON
+		uo.user_id=u.user_id
+		JOIN organization o ON o.org_id=uo.org_id
+		WHERE
+		uo.org_id=#{orgId}
+	</select>
+
+
+
+</mapper>

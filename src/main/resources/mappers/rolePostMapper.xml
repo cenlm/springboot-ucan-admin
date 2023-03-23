@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ucan.dao.RolePostMapper">
+	<resultMap id="rolePostMap"
+		type="com.ucan.entity.RolePost">
+		<id property="roleId" column="role_id" />
+		<id property="postId" column="post_id" />
+		<result property="sysCode" column="sys_code" />
+		<association property="role"
+			javaType="com.ucan.entity.Role">
+			<result property="roleName" column="role_name" />
+		</association>
+		<association property="post"
+			javaType="com.ucan.entity.Post">
+			<result property="postName" column="post_name" />
+		</association>
+	</resultMap>
+
+
+
+	<insert id="insertBatch">
+		insert into role_post(role_id,post_id,sys_code)values
+		<foreach collection="list" separator="," item="item">
+			(#{item.roleId},#{item.postId},#{item.sysCode})
+		</foreach>
+	</insert>
+
+	<insert id="insert">
+		insert into
+		role_post(role_id,post_id,sys_code)values(#{roleId},#{postId},#{sysCode})
+	</insert>
+
+	<select id="getPostByRoleId" resultMap="rolePostMap">
+		select * from role_post
+		where role_id=#{roleId}
+	</select>
+
+	<select id="getRolePostByPostIds" resultMap="rolePostMap">
+		select rp.role_id role_id,r.role_name role_name,rp.post_id
+		post_id,p.post_name post_name from role_post rp
+		join roles r on
+		rp.role_id=r.role_id
+		join post p on
+		rp.post_id=p.post_id
+		where rp.post_id
+		in
+		<foreach collection="list" open="(" separator="," close=")"
+			item="postId">
+			#{postId}
+		</foreach>
+	</select>
+
+	<select id="getRolePostByPostId" resultMap="rolePostMap">
+		select rp.role_id
+		role_id,r.role_name role_name,rp.post_id
+		post_id,p.post_name post_name
+		from role_post rp
+		join roles r on
+		rp.role_id=r.role_id
+		join post p on
+		rp.post_id=p.post_id
+		where rp.post_id=#{postId}
+
+	</select>
+
+
+	<select id="getRolePostCountsByRoleIds" resultType="int">
+		select count(*) from role_post where role_id in
+		<foreach collection="list" open="(" separator="," close=")"
+			item="roleId">
+			#{roleId}
+		</foreach>
+	</select>
+
+	<delete id="deleteRolePostByRoleIds">
+		delete from role_post where role_id in
+		<foreach collection="list" open="(" separator="," close=")"
+			item="roleId">
+			#{roleId}
+		</foreach>
+	</delete>
+
+	<delete id="deleteBatch">
+		delete from role_post where (role_id,post_id) in
+		<foreach collection="list" item="item" index="index"
+			separator="," open="(" close=")">
+			(#{item.roleId},#{item.postId})
+		</foreach>
+	</delete>
+
+</mapper>

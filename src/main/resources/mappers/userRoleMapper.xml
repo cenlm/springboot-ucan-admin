@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ucan.dao.UserRoleMapper">
+
+	<resultMap id="userRoleMap" type="com.ucan.entity.UserRole">
+		<id property="userId" column="user_id" />
+		<id property="roleId" column="role_id" />
+		<association property="org"
+			javaType="com.ucan.entity.Organization">
+			<result property="orgName" column="org_name" />
+		</association>
+		<association property="role"
+			javaType="com.ucan.entity.Role">
+			<result property="roleName" column="role_name" />
+			<result property="roleCode" column="role_code" />
+		</association>
+		<association property="post"
+			javaType="com.ucan.entity.Post">
+			<result property="postName" column="post_name" />
+		</association>
+		<association property="user"
+			javaType="com.ucan.entity.User">
+			<result property="userName" column="username" />
+			<result property="sex" column="sex" />
+			<result property="cellPhoneNumber" column="cell_phone_number" />
+			<result property="address" column="address" />
+			<result property="email" column="email" />
+			<result property="isSuper" column="is_super" />
+			<result property="isEnable" column="is_enable" />
+			<result property="remarks" column="remarks" />
+		</association>
+	</resultMap>
+
+	<select id="queryRolesByUserId" resultMap="userRoleMap">
+		SELECT ro.role_id
+		role_id,r.role_code role_code from users u
+		JOIN user_organization uo ON
+		u.user_id=uo.user_id
+		JOIN organization o ON uo.org_id=o.org_id
+		JOIN
+		role_organization ro ON
+		o.org_id=ro.org_id
+		join roles r on
+		r.role_id=ro.role_id
+		WHERE u.user_id=#{userId}
+		UNION
+		SELECT rp.role_id
+		role_id,r.role_code role_code from users u1
+		JOIN user_post up ON
+		up.user_id=u1.user_id
+		JOIN
+		post p ON p.post_id=up.post_id
+		JOIN role_post
+		rp ON
+		rp.post_id=p.post_id
+		join roles r on r.role_id=rp.role_id
+		WHERE
+		u1.user_id=#{userId}
+	</select>
+
+	<select id="queryAllRoleIds" resultMap="userRoleMap">
+		SELECT role_id,role_code,role_name from roles
+	</select>
+
+
+
+	<!-- 查询角色成员 -->
+	<select id="queryRoleUsersByPage" resultMap="userRoleMap">
+		SELECT u.username
+		username,u.cell_phone_number cell_phone_number,u.email
+		email,r.role_name role_name,u.sex sex,u.is_super is_super from roles r
+		JOIN
+		role_organization ro on
+		r.role_id=ro.role_id
+		JOIN organization o ON
+		ro.org_id=o.org_id
+		JOIN
+		user_organization uo ON
+		uo.org_id=o.org_id
+		JOIN
+		users
+		u ON
+		uo.user_id=u.user_id WHERE r.role_id=#{roleId}
+		UNION
+		SELECT
+		u1.username
+		username,u1.cell_phone_number cell_phone_number,u1.email
+		email,r1.role_name role_name,u1.sex sex,u1.is_super is_super from
+		roles r1
+		JOIN role_post rp ON
+		r1.role_id=rp.role_id
+		JOIN post
+		p ON
+		p.post_id=rp.post_id
+		JOIN user_post
+		up ON up.post_id=p.post_id
+		JOIN users
+		u1 ON up.user_id=u1.user_id
+		WHERE
+		r1.role_id=#{roleId}
+	</select>
+
+	<!-- <insert id="insert" parameterType="com.ucan.entity.UserRole"> insert 
+		into user_role(user_id,role_id)values(#{userId},#{roleId}) </insert> <delete 
+		id="deleteById"> delete from user_role where user_id=#{userId} </delete> 
+		<update id="update"> update user_role <trim prefix="SET" suffixOverrides=","> 
+		<if test="userId!=null">user_id=#{userId},</if> <if test="roleId!=null">role_id=#{roleId}</if> 
+		</trim> where user_id=#{userId} and role_id=#{roleId} </update> <select id="queryRolesByUserId" 
+		resultMap="userRoleMap"> select * from user_role where user_id=#{userId} 
+		</select> <select id="queryByPage" resultMap="userRoleMap"> select ur.user_id,ur.role_id,role.role_name,role.create_time,role.remarks 
+		from user_role ur left join roles role on ur.role_id=role.role_id where ur.user_id=#{userId} 
+		</select> <select id="queryUserRoleCounts" resultType="int"> select count(*) 
+		from user_role where user_id = #{userId} </select> -->
+
+
+
+
+
+</mapper>

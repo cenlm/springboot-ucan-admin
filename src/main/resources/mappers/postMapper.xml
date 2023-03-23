@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ucan.dao.PostMapper">
+	<cache />
+	<resultMap id="postMap" type="com.ucan.entity.Post">
+		<id property="postId" column="post_id" />
+		<result property="postName" column="post_name" />
+		<result property="parentId" column="parent_id" />
+		<result property="orgId" column="org_id" />
+		<result property="postCode" column="post_code" />
+		<result property="icon" column="icon" />
+		<result property="position" column="position" />
+
+	</resultMap>
+
+	<resultMap type="com.ucan.entity.UserPost" id="postUserMap">
+		<id property="postId" column="post_id" />
+		<id property="userId" column="user_id" />
+		<association property="user"
+			javaType="com.ucan.entity.User">
+			<result property="userName" column="user_name" />
+		</association>
+		<association property="post"
+			javaType="com.ucan.entity.Post">
+			<result property="postName" column="post_name" />
+		</association>
+	</resultMap>
+
+	<insert id="insert" parameterType="com.ucan.entity.Post">
+		insert into
+		post(post_id,post_name,parent_id,org_id,post_code,icon,position)values(#{postId},#{postName},#{parentId},#{orgId},#{postCode},#{icon},#{position})
+	</insert>
+
+	<update id="update">
+		update post
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="postName!=null">post_name=#{postName},</if>
+			<if test="postCode!=null">post_code=#{postCode},</if>
+			<if test="parentId!=null">parent_id=#{parentId},</if>
+			<if test="icon!=null">icon=#{icon},</if>
+			<if test="position!=null">position=#{position},</if>
+			<if test="orgId!=null">org_id=#{orgId}</if>
+		</trim>
+		where post_id=#{postId}
+	</update>
+
+	<delete id="delete">
+		delete from post where post_id=#{postId}
+	</delete>
+
+	<select id="queryPostCountByParentId" resultType="int">
+		select count(*)
+		from post where parent_id=#{parentId}
+	</select>
+
+	<select id="queryUserPostCountByPostId" resultType="int">
+		select
+		count(*) from user_post where
+		post_id=#{postId}
+	</select>
+
+	<select id="queryUserPostByUserId" resultMap="postUserMap">
+		select u.user_id
+		user_id,u.username username,up.post_id post_id,p.post_name
+		post_name
+		from user_post up
+		join users u ON u.user_id=up.user_id
+		JOIN post p on
+		up.post_id=p.post_id
+		WHERE up.user_id=#{userId}
+	</select>
+
+	<select id="queryPostsByOrgId" resultMap="postMap">
+		select * from post
+		where org_id=#{orgId} order by position asc
+	</select>
+
+	<select id="getPostNameById" resultType="java.lang.String">
+		select post_name from
+		post where post_id=#{postId}
+	</select>
+</mapper>

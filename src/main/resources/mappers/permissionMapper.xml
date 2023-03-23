@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ucan.dao.PermissionMapper">
+	<cache />
+	<resultMap id="permissionMap"
+		type="com.ucan.entity.Permission">
+		<id property="permissionId" column="permission_id" />
+		<result property="permissionName" column="permission_name" />
+		<result property="permissionType" column="permission_type" />
+		<result property="parentId" column="parent_id" />
+		<result property="position" column="position" />
+		<result property="createTime" column="create_time" />
+		<result property="modifyTime" column="modify_time" />
+		<result property="remarks" column="remarks" />
+		<result property="url" column="url" />
+		<result property="sysCode" column="sys_code" />
+		<result property="icon" column="icon" />
+		<result property="permissionCode" column="permission_code" />
+	</resultMap>
+
+	<insert id="insert" parameterType="com.ucan.entity.Permission">
+		insert into
+		permissions(permission_id,permission_name,parent_id,position,create_time,remarks,permission_type,url,sys_code,icon,permission_code)values(#{permissionId},#{permissionName},#{parentId},#{position},#{createTime},#{remarks},#{permissionType},#{url},#{sysCode},#{icon},#{permissionCode})
+	</insert>
+
+	<delete id="deleteById">
+		delete from permissions where permission_id=#{id}
+	</delete>
+
+	<delete id="deleteByParentId">
+		delete from permissions where parent_id=#{parentId}
+	</delete>
+
+	<delete id="deleteByIds">
+		delete from permissions where permission_id in
+		<foreach collection="list" open="(" separator="," close=")"
+			item="permissionId">
+			#{permissionId}
+		</foreach>
+	</delete>
+
+	<update id="update">
+		update permissions
+		<trim prefix="SET" suffixOverrides=",">
+			<if test="permissionName!=null">permission_name=#{permissionName},</if>
+			<if test="parentId!=null">parent_id=#{parentId},</if>
+			<if test="permissionType!=null">permission_type=#{permissionType},</if>
+			<if test="url!=null">url=#{url},</if>
+			<if test="sysCode!=null">sys_code=#{sysCode},</if>
+			<if test="position!=null">position=#{position},</if>
+			<if test="modifyTime!=null">modify_time=#{modifyTime},</if>
+			<if test="remarks!=null">remarks=#{remarks},</if>
+			<if test="icon">icon=#{icon},</if>
+			<if test="permissionCode!=null">permission_code=#{permissionCode}</if>
+		</trim>
+		where permission_id=#{permissionId}
+	</update>
+
+	<select id="queryById" resultMap="permissionMap">
+		select * from permissions where
+		permission_id=#{permissionId}
+	</select>
+
+	<select id="queryByParentId" resultMap="permissionMap">
+		select * from permissions
+		where
+		parent_id=#{parentId}
+	</select>
+	<!-- 判断某节点是否有子节点 -->
+	<select id="queryCountByParentId" resultType="int">
+		select count(*) from permissions
+		where
+		parent_id=#{parentId}
+	</select>
+
+	<select id="queryByName" resultMap="permissionMap">
+		select * from permissions
+		where
+		permission_name=#{permissionName}
+	</select>
+
+	<select id="queryAllPermissions" resultMap="permissionMap">
+		select * from
+		permissions order by position asc
+	</select>
+
+	<select id="getPermissionsByPage" resultMap="permissionMap">
+		select * from
+		permissions
+	</select>
+
+</mapper>
