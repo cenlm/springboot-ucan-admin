@@ -46,13 +46,13 @@ cross_permission: 跨权限<br>
 
 #### 运行环境
 1.  JDK 1.8+
-2.  Spring、SpringMvc 5.2.12.RELEASE
+2.  SpringBoot2.7.9
 3.  Mybatis-3.5.9
-4.  shiro-core 1.10.1
+4.  Shiro1.11.0
 5.  Mysql 5.7.33
 6.  Layui 2.7.6
-7.  Tomcat-8.5.63
-8.  Maven
+7.  Tomcat 9
+8.  Freemarker
 
 #### 待办事项
 1.角色用户数限制。<br>
