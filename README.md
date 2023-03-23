@@ -3,13 +3,13 @@
 #### 介绍
 基于RBAC3的权限管理系统。<br>
 该系统是ucan-admin的springboot版本。<br>
-使用的技术栈:SpringBoot2.7.9 + Shiro + Mysql + LayUi（及LayUi第三方插件）+ FreeMarker。<br>
+使用的技术栈:SpringBoot2.7.9 + Shiro1.11.0 + Mysql5.7 + LayUi（及LayUi第三方插件）+ FreeMarker。<br>
 基本功能：<br>
 1.用户登录、认证授权、Session管理、账号登录限制（一个账号只能在一处登录）。<br>
 2.组织结构管理、职位管理、用户管理、组织分配。<br>
 3.角色管理：<br>
 	3.1 角色基本信息管理。<br>
-	3.2 角色分层、角色互斥、角色权限继承、角色分配、权限分配、角色用户登录数限制等。<br>
+	3.2 角色分层、角色互斥、角色权限继承、角色分配、权限分配、角色用户数限制（待办）等。<br>
 4.权限管理。<br>
 
 用户名：admin  密码：123456<br>
