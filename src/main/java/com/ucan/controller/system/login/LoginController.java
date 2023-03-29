@@ -7,6 +7,8 @@ import java.util.Objects;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.DisabledAccountException;
+import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.session.mgt.eis.SessionDAO;
@@ -109,7 +111,13 @@ public class LoginController {
 			msg = JSON.toJSONString(Response.success("用户登录成功！"));
 
 		    } catch (AuthenticationException e) {
-			msg = JSON.toJSONString(Response.fail("用户名或密码错误！"));
+			if (e instanceof IncorrectCredentialsException) {
+			    msg = JSON.toJSONString(Response.fail("用户名或密码错误！"));
+			} else if (e instanceof DisabledAccountException) {
+			    msg = JSON.toJSONString(Response.fail(e.getMessage()));
+			} else {
+			    msg = JSON.toJSONString(Response.fail("登录失败！"));
+			}
 			e.printStackTrace();
 		    }
 		} else {

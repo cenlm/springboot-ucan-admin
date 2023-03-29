@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.shiro.authc.credential.CredentialsMatcher;
 import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.apache.shiro.realm.Realm;
 import org.apache.shiro.session.SessionListener;
@@ -23,6 +24,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 
+import com.ucan.shiro.LimitLoginCredentialsMatcher;
 import com.ucan.shiro.UCanRealm;
 import com.ucan.shiro.UcanSessionIdGenerator;
 import com.ucan.shiro.listener.ShiroSessionListener;
@@ -68,13 +70,23 @@ public class ShiroConfig {
      * @return
      */
     @Bean("uCanRealm")
-    public Realm uCanRealm() {
+    public Realm uCanRealm(@Qualifier("limitLoginMatcher") CredentialsMatcher limitLoginMatcher) {
 	UCanRealm realm = new UCanRealm();
 	realm.setCachingEnabled(true);
 	realm.setAuthorizationCachingEnabled(true);
 	realm.setAuthorizationCacheName("shiroAuthzCache");
-
+	realm.setCredentialsMatcher(limitLoginMatcher);
 	return (Realm) realm;
+    }
+
+    /**
+     * 用户登录失败次数限制
+     * 
+     * @return
+     */
+    @Bean("limitLoginMatcher")
+    public CredentialsMatcher limitLoginMatcher() {
+	return new LimitLoginCredentialsMatcher();
     }
 
 //    @Bean
@@ -145,7 +157,8 @@ public class ShiroConfig {
     @Bean("uCanCookie")
     public SimpleCookie uCanCookie() {
 	SimpleCookie cookie = new SimpleCookie("uCanCookie");
-	cookie.setMaxAge(-1);
+	// cookie有效期：3天
+	cookie.setMaxAge(259200);
 	cookie.setHttpOnly(true);
 	return cookie;
     }

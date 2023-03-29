@@ -65,4 +65,24 @@
        diskPersistent="true"
        diskExpiryThreadIntervalSeconds="600"/>
        
+        <!-- 登录失败次数缓存 -->
+ <cache name="failLoginCount"
+       maxElementsInMemory="10000"
+       overflowToDisk="false"
+       eternal="false"
+       timeToLiveSeconds="0"
+       timeToIdleSeconds="0"
+       diskPersistent="true"
+       diskExpiryThreadIntervalSeconds="600"/>
+       
+   <!-- 登录限制时长缓存 -->
+ <cache name="limitTimer"
+       maxElementsInMemory="10000"
+       overflowToDisk="false"
+       eternal="false"
+       timeToLiveSeconds="0"
+       timeToIdleSeconds="0"
+       diskPersistent="false"
+       diskExpiryThreadIntervalSeconds="600"/>
+       
 </ehcache>

@@ -33,5 +33,7 @@ layui.use(['form'], function() {
 				});
 			}
 		});
+		//防止表单重复提交
+		return false;
 	});
 });
