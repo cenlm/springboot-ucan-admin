@@ -12,7 +12,10 @@ import org.apache.shiro.session.mgt.ExecutorServiceSessionValidationScheduler;
 import org.apache.shiro.session.mgt.SessionManager;
 import org.apache.shiro.session.mgt.SessionValidationScheduler;
 import org.apache.shiro.session.mgt.ValidatingSessionManager;
+import org.apache.shiro.session.mgt.eis.CachingSessionDAO;
+import org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO;
 import org.apache.shiro.session.mgt.eis.SessionDAO;
+import org.apache.shiro.session.mgt.eis.SessionIdGenerator;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
@@ -161,6 +164,14 @@ public class ShiroConfig {
 	cookie.setMaxAge(259200);
 	cookie.setHttpOnly(true);
 	return cookie;
+    }
+
+    @Bean("sessionDAO")
+    public SessionDAO shiroSessionDao(@Qualifier("uCanSessionIdGenerator") SessionIdGenerator sessionIdGenerator) {
+	CachingSessionDAO sessionDao = new EnterpriseCacheSessionDAO();
+	sessionDao.setActiveSessionsCacheName("shiroActiveSessions");
+	sessionDao.setSessionIdGenerator(sessionIdGenerator);
+	return sessionDao;
     }
 
     /**

@@ -144,6 +144,7 @@
  		<div class="layui-btn-group">
 			<@shiro.hasPermission name="Btn:USER_DETAIL"><a class="layui-btn  layui-btn-xs"  lay-event="detail">查看</a></@shiro.hasPermission>
 			<@shiro.hasPermission name="Btn:USER_DEL"><a class="layui-btn  layui-btn-xs"  lay-event="edit">分配组织</a></@shiro.hasPermission>
+			<@shiro.hasPermission name="Btn:USER_RESET_PASSWORD"><a class="layui-btn  layui-btn-xs"  lay-event="reset_password" title="重置密码为：88888888">重置密码</a></@shiro.hasPermission>
 			<@shiro.hasPermission name="Btn:USER_STATUS_UPD"><a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del" {{ d.isSuper == 1 ? 'style=display:none;' : '' }}>删除</a></@shiro.hasPermission>
 		</div>
 

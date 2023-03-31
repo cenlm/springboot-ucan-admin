@@ -60,14 +60,14 @@ public class LimitLoginCredentialsMatcher extends SimpleCredentialsMatcher {
 		if (failLogin == 5) {
 		    limitTimer.put(limitTimerKey, new Date(System.currentTimeMillis() + 1000 * 60 * 15));
 		}
-		msg = "连续"+failLogin+"次登录失败，请15分钟后再试！";
+		msg = "连续" + failLogin + "次登录失败，请15分钟后再试！";
 	    } else if (!Objects.isNull(failLoginCounts) && failLogin >= 10 && failLogin < 15) {// 连续10登录失败后触发
 		if (failLogin == 10) {
 		    limitTimer.put(limitTimerKey, new Date(System.currentTimeMillis() + 1000 * 60 * 45));
 		}
-		msg = "连续"+failLogin+"次登录失败，请45分钟后再试！";
+		msg = "连续" + failLogin + "次登录失败，请45分钟后再试！";
 	    } else if (!Objects.isNull(failLoginCounts) && failLogin >= 15) {
-		msg = "对不起，您操作太频繁，请联系管理员！";
+		msg = "对不起，您操作太频繁，请联系管理员重置密码！";
 	    }
 	    if (msg != "") {
 		throw new DisabledAccountException(msg);
@@ -75,10 +75,11 @@ public class LimitLoginCredentialsMatcher extends SimpleCredentialsMatcher {
 
 	}
 	Date timeAllowToLogin = limitTimer.get(limitTimerKey);
-	if (!Objects.isNull(timeAllowToLogin)) {
+	AtomicInteger limitCount = attemptsCache.get(failLoginCountKey);
+	if (!Objects.isNull(timeAllowToLogin) && !Objects.isNull(limitCount)) {
 	    long leftLimitedTime = System.currentTimeMillis() - timeAllowToLogin.getTime();
 	    if (leftLimitedTime < 0) {// 限制时长未结束，不允许登录操作
-		throw new DisabledAccountException("该账号处于限制登录状态，请稍后再试！");
+		throw new DisabledAccountException("连续" + limitCount.incrementAndGet() + "次登录失败，该账号已被限制登录，请联系管理员重置密码！");
 	    } else {
 		// 已过了限制时长，清除之前用户的登录失败信息记录
 		attemptsCache.remove(failLoginCountKey);

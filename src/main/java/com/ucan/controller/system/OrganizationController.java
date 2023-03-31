@@ -68,11 +68,10 @@ public class OrganizationController {
     @ResponseBody
     public String updateUserOrgRelation(@RequestParam(name = "") String userId,
 	    @RequestParam(name = "isSuper", defaultValue = "0") String isSuper,
-	    @RequestParam(name = "checkedOrgIds[]", defaultValue = "") List<String> checkedOrgIds) {
+	    @RequestParam(name = "checkedOrgIds[]", defaultValue = "") List<String> checkedOrgIds) throws Exception {
 	String msg = "";
 	int result = 0;
 
-	try {
 	    if (isSuper.equals("1")) {
 		return JSON.toJSONString(Response.fail("不允许给超级管理员再分配组织！"));
 	    }
@@ -83,9 +82,6 @@ public class OrganizationController {
 	    } else {
 		msg = JSON.toJSONString(Response.fail("组织分配失败！"));
 	    }
-	} catch (Exception e) {
-	    msg = JSON.toJSONString(Response.fail(e.getMessage()));
-	}
 	return msg;
     }
 

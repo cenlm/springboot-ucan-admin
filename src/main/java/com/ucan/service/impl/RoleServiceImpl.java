@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ucan.base.exception.CustomException;
 import com.ucan.dao.PostMapper;
 import com.ucan.dao.RoleMapper;
 import com.ucan.dao.RoleOrganizationMapper;
@@ -23,6 +22,7 @@ import com.ucan.entity.RolePost;
 import com.ucan.entity.tree.node.RoleDTreeNode;
 import com.ucan.entity.tree.response.DTreeResponse;
 import com.ucan.entity.tree.response.Status;
+import com.ucan.exception.CustomException;
 import com.ucan.service.IRoleService;
 import com.ucan.utils.UUIDUtil;
 

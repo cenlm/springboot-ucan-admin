@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson2.JSON;
 import com.ucan.base.response.MsgEnum;
 import com.ucan.base.response.Response;
+import com.ucan.dao.PermissionMapper;
 import com.ucan.entity.Permission;
 import com.ucan.entity.page.PageParameter;
 import com.ucan.entity.tree.node.PermissionTreeNode;
@@ -99,20 +101,14 @@ public class PermissionController {
 
     @RequestMapping("/delPermissionById")
     @ResponseBody
-    public String delPermissionById(String permissionId) {
+    public String delPermissionById(String permissionId) throws Exception {
 	String result = "";
-	try {
-	    int updCount = permissionService.deletePermissionById(permissionId);
-	    if (updCount > 0) {
-		result = JSON.toJSONString(Response.success("权限删除成功！"));
-	    } else {
-		result = JSON.toJSONString(Response.fail("权限删除失败！"));
-	    }
-	} catch (Exception e) {
-	    result = JSON.toJSONString(e.getMessage());
-	    e.printStackTrace();
+	int updCount = permissionService.deletePermissionById(permissionId);
+	if (updCount > 0) {
+	    result = JSON.toJSONString(Response.success("权限删除成功！"));
+	} else {
+	    result = JSON.toJSONString(Response.fail("权限删除失败！"));
 	}
-
 	return result;
     }
 

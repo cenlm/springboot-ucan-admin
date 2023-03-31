@@ -10,7 +10,6 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ucan.base.exception.CustomException;
 import com.ucan.dao.PermissionMapper;
 import com.ucan.dao.RolePermissionMapper;
 import com.ucan.entity.Permission;
@@ -20,6 +19,7 @@ import com.ucan.entity.tree.node.PermissionTreeNode;
 import com.ucan.entity.tree.response.DTreeResponse;
 import com.ucan.entity.tree.response.Status;
 import com.ucan.entity.tree.status.PermissionNodeStatus;
+import com.ucan.exception.CustomException;
 import com.ucan.service.IPermissionService;
 import com.ucan.utils.UUIDUtil;
 

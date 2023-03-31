@@ -1,14 +1,13 @@
 package com.ucan.controller.system.login;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.DisabledAccountException;
-import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.session.mgt.eis.SessionDAO;
@@ -43,11 +42,6 @@ public class LoginController {
     private SessionDAO sessionDAO;
     private static Logger log = LoggerFactory.getLogger(LoginController.class);
 
-    @RequestMapping("/")
-    public String welcome() {
-	return "login";
-    }
-    
     @RequestMapping("/toLogin")
     public String toLogin() {
 	return "login";
@@ -57,75 +51,58 @@ public class LoginController {
     @ResponseBody
     public String login(@RequestParam(name = "username", required = true, defaultValue = "") String username,
 	    @RequestParam(name = "password", required = true, defaultValue = "") String password,
-	    @RequestParam(name = "rememberMe", defaultValue = "false") String rememberMe) {
+	    @RequestParam(name = "rememberMe", defaultValue = "false") String rememberMe) throws Exception {
 	String msg = "";
-	try {
-	    if (username == "" || password == "") {
-		msg = JSON.toJSONString(Response.fail("用户名|密码不能为空！"));
-	    }
-	    User user = userService.queryByName(username);
-	    if (user == null) {// 没有查询到用户
-		msg = JSON.toJSONString(Response.fail("用户名或密码错误！"));
-	    } else if (user.getIsEnable() == 0) {
-		msg = JSON.toJSONString(Response.fail("该用户已被禁用！"));
-	    } else {
+	if (username == "" || password == "") {
+	    msg = JSON.toJSONString(Response.fail("用户名|密码不能为空！"));
+	}
+	User user = userService.queryByName(username);
+	if (user == null) {// 没有查询到用户
+	    msg = JSON.toJSONString(Response.fail("用户名或密码错误！"));
+	} else if (user.getIsEnable() == 0) {
+	    msg = JSON.toJSONString(Response.fail("该用户已被禁用！"));
+	} else {
 
-		Subject currentUser = SecurityUtils.getSubject();
-		if (!currentUser.isAuthenticated()) {/// IncorrectCredentialsException
-		    try {
-			// 从缓存中获取还存活的session
-			Collection<Session> activeSessions = sessionDAO.getActiveSessions();
-			if (activeSessions.size() > 0) {
-			    activeSessions.forEach(s -> {
-				SimplePrincipalCollection principal = (SimplePrincipalCollection) s
-					.getAttribute(DefaultSubjectContext.PRINCIPALS_SESSION_KEY);
-				if (!Objects.isNull(principal)) {
-				    String otherUser = (String) principal.getPrimaryPrincipal();
-				    //将在其他地方登录的相同的账号踢出系统
-				    if (otherUser.equals(username)
-					    && user.getPassword().equals(EncryptionUtil.md5Encode(password))) {
-					s.setTimeout(100);
-				    }
-				}
-
-			    });
+	    Subject currentUser = SecurityUtils.getSubject();
+	    if (!currentUser.isAuthenticated()) {/// IncorrectCredentialsException
+		// 从缓存中获取还存活的session
+		Collection<Session> activeSessions = sessionDAO.getActiveSessions();
+		if (activeSessions.size() > 0) {
+		    activeSessions.forEach(s -> {
+			SimplePrincipalCollection principal = (SimplePrincipalCollection) s
+				.getAttribute(DefaultSubjectContext.PRINCIPALS_SESSION_KEY);
+			if (!Objects.isNull(principal)) {
+			    String otherUser = (String) principal.getPrimaryPrincipal();
+			    // 将在其他地方登录的相同的账号踢出系统
+			    if (otherUser.equals(username)
+				    && user.getPassword().equals(EncryptionUtil.md5Encode(password))) {
+				s.setTimeout(100);
+			    }
 			}
-			
-			UsernamePasswordToken token = new UsernamePasswordToken(username,
-				EncryptionUtil.md5Encode(password));
-			//要不要自定义过滤器来解决rememberMe失效的问题呢？
-			//https://blog.csdn.net/nsrainbow/article/details/36945267/
-			token.setRememberMe(rememberMe.equals("true") ? true : false);
-			currentUser.login(token);
-			User userObjUser = new User();
-			userObjUser.setUserId(user.getUserId());
-			// 设置登录时间
-			userObjUser.setEntryDate(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
-			// 设置上次登录时间
-			userObjUser.setLastLogin(user.getEntryDate());
 
-			// 更新登录时间和上次登录时间
-			userService.update(userObjUser);
-			Session session = currentUser.getSession(false);
-			session.setAttribute("currentUserId", user.getUserId());
-			msg = JSON.toJSONString(Response.success("用户登录成功！"));
-
-		    } catch (AuthenticationException e) {
-			if (e instanceof IncorrectCredentialsException) {
-			    msg = JSON.toJSONString(Response.fail("用户名或密码错误！"));
-			} else if (e instanceof DisabledAccountException) {
-			    msg = JSON.toJSONString(Response.fail(e.getMessage()));
-			} else {
-			    msg = JSON.toJSONString(Response.fail("登录失败！"));
-			}
-			e.printStackTrace();
-		    }
-		} else {
-		    msg = JSON.toJSONString(Response.success("用户已登录！"));
+		    });
 		}
+
+		UsernamePasswordToken token = new UsernamePasswordToken(username, EncryptionUtil.md5Encode(password));
+		// 要不要自定义过滤器来解决rememberMe失效的问题呢？
+		// https://blog.csdn.net/nsrainbow/article/details/36945267/
+		token.setRememberMe(rememberMe.equals("true") ? true : false);
+		currentUser.login(token);
+		User userObjUser = new User();
+		userObjUser.setUserId(user.getUserId());
+		// 设置登录时间
+		userObjUser.setEntryDate(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+		// 设置上次登录时间
+		userObjUser.setLastLogin(user.getEntryDate());
+
+		// 更新登录时间和上次登录时间
+		userService.update(userObjUser);
+		Session session = currentUser.getSession(false);
+		session.setAttribute("currentUserId", user.getUserId());
+		msg = JSON.toJSONString(Response.success("用户登录成功！"));
+	    } else {
+		msg = JSON.toJSONString(Response.success("用户已登录！"));
 	    }
-	} catch (Exception e) {
-	    msg = JSON.toJSONString(Response.fail(e.getMessage()));
 	}
 	return msg;
     }

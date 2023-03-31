@@ -1,4 +1,4 @@
-package com.ucan.base.exception;
+package com.ucan.exception;
 
 /**
  * @Description: 自定义异常

@@ -7,11 +7,11 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ucan.base.exception.CustomException;
 import com.ucan.dao.RoleMapper;
 import com.ucan.dao.RolePermissionMapper;
 import com.ucan.entity.Role;
 import com.ucan.entity.RolePermission;
+import com.ucan.exception.CustomException;
 import com.ucan.service.IRolePermissionService;
 
 /**

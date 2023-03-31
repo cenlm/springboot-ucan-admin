@@ -265,6 +265,8 @@ element.style {
 			                        });
 		                        }
 		                });
+		        	//防止表单重复提交
+				return false;
 	                });
 
 	                function renderUserDetail(){
@@ -363,6 +365,8 @@ element.style {
 				                        });
 			                        }
 			                });
+	                		//防止表单重复提交
+	         		return false;
 	                });
 	                
                 });

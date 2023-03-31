@@ -28,7 +28,7 @@ body {
 				<ul class="layui-nav"
 					style="text-align: right; background-color: transparent;">
 					<!-- 小Tips：这里有没有发现，设置导航靠右对齐（或居中对齐）其实非常简单 -->
-					<li class="layui-nav-item"><a href="javascript:;">欢迎 <shiro:principal />
+					<li class="layui-nav-item"><a href="javascript:;">欢迎 <@shiro.principal />
 							登录！
 					</a></li>
 					<li class="layui-nav-item"><a href="javascript:;">消息<span

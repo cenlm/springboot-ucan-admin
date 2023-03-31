@@ -122,6 +122,14 @@ public interface IUserService {
     Map<String, String> updatePassword(String userId, String oldPassword, String newPassword);
 
     /**
+     * 重置密码
+     * 
+     * @param user
+     * @return
+     */
+    int updatePasswordReset(User user);
+    
+    /**
      * 个人设置页详情内容
      * 
      * @param userId

@@ -1481,6 +1481,42 @@ $("#updateOrg input[name='icon']").next().find("div[class='layui-ext-icon-select
 						}
 					});
 
+				}else if (layEvent === 'reset_password') {//重置密码
+				    	let userId = data.userId;
+				    	let userName = data.userName;
+				    	layer.confirm('确定重置密码为 88888888 ？', {
+						icon: 3,
+						title: '重置密码'
+					}, function(index) {
+						$.ajax({
+							type: "POST",
+							url: context_path + "/user/resetPassword",
+							data: {
+								userId:userId,
+								userName:userName
+							},
+							dataType: "json",
+							success: function(result) {
+								if (result.code == 0) {
+									layer.msg(result.msg, {
+										icon: 6,
+										time: 6000
+									});
+								} else {
+									layer.msg(result.msg, {
+										icon: 5
+									});
+								}
+
+							},
+							error: function(e) {
+								layer.msg(e.responseText, {
+									icon: 2
+								});
+							}
+
+						});
+					});
 				}
 			});
 

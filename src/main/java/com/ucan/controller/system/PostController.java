@@ -1,5 +1,8 @@
 package com.ucan.controller.system;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,6 +12,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson2.JSON;
 import com.ucan.base.response.Response;
 import com.ucan.entity.Post;
+import com.ucan.entity.tree.node.PostTreeNode;
+import com.ucan.entity.tree.node.TreeNode;
 import com.ucan.entity.tree.response.DTreeResponse;
 import com.ucan.service.IPostService;
 import com.ucan.service.IRolePostService;
@@ -50,20 +55,14 @@ public class PostController {
 
     @RequestMapping("/addPost")
     @ResponseBody
-    public String addPost(Post post) {
+    public String addPost(Post post) throws Exception {
 	String msg = "";
-	try {
 	    int result = postService.addPost(post);
 	    if (result > 0) {
 		return JSON.toJSONString(Response.success("成功新增职位：【" + post.getPostName() + "】，并分配了基础角色！"));
 	    } else {
 		return JSON.toJSONString(Response.fail("职位新增失败！"));
 	    }
-	} catch (Exception e) {
-	    msg = JSON.toJSONString(Response.fail(e.getMessage()));
-	    e.printStackTrace();
-	}
-	return msg;
     }
 
     @RequestMapping("/updatePost")

@@ -105,6 +105,12 @@
 		user_id=#{userId}
 	</update>
 
+	<update id="updatePasswordReset">
+		update users set
+		password=#{password} where
+		user_id=#{userId}
+	</update>
+
 	<select id="queryByPasswordAndUserId" resultType="int">
 		select count(*)
 		from users where user_id=#{userId} and password=#{password}
@@ -122,7 +128,8 @@
 		where u.user_id=#{userId}
 		union
 		select
-		u.user_id,u.username,'无' post_name,u.user_alias,u.sex,u.cell_phone_number,u.address,u.entry_date,u.last_login,u.is_super,u.email,u.create_time,u.modify_time,u.is_enable,u.remarks
+		u.user_id,u.username,'无'
+		post_name,u.user_alias,u.sex,u.cell_phone_number,u.address,u.entry_date,u.last_login,u.is_super,u.email,u.create_time,u.modify_time,u.is_enable,u.remarks
 		from users u
 		where u.user_id=#{userId}
 	</select>

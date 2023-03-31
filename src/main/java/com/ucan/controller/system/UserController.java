@@ -5,7 +5,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.apache.shiro.cache.Cache;
+import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,6 +29,7 @@ import com.ucan.entity.page.PageParameter;
 import com.ucan.service.IOrganizationService;
 import com.ucan.service.IUserOrgService;
 import com.ucan.service.IUserService;
+import com.ucan.utils.EncryptionUtil;
 import com.ucan.utils.page.PageUtil;
 
 /**
@@ -39,6 +45,10 @@ public class UserController {
     private IOrganizationService organizationService;
     @Autowired
     private IUserOrgService userOrgService;
+
+    @Autowired
+    private EhCacheManager ehCacheManager;
+
     @RequestMapping("/user_list")
     public String toAddUserPage() {
 	return "user/user_list";
@@ -168,12 +178,13 @@ public class UserController {
      * @param groupId 用户组Id
      * @param type    目标映射类型 post:职位 group:用户组
      * @return
+     * @throws Exception
      */
     @RequestMapping("/addUser")
     @ResponseBody
     public String addUser(User user, @RequestParam(name = "postId", defaultValue = "") String postId,
 	    @RequestParam(name = "groupId", defaultValue = "") String groupId,
-	    @RequestParam(name = "type", defaultValue = "") String type) {
+	    @RequestParam(name = "type", defaultValue = "") String type) throws Exception {
 	String jsonDataString = "";
 	if (user.getUserName() == "" || user.getUserName() == null) {
 	    jsonDataString = JSON.toJSONString(Response.fail("用户名不能为空！"));
@@ -183,17 +194,12 @@ public class UserController {
 	paramMap.put("groupId", groupId);
 	paramMap.put("type", type);
 	int updCount = 0;
-	try {
-	    updCount = userService.insert(user, paramMap);
-	    if (updCount > 0) {
-		User userFromServer = userService.queryById(user.getUserId());
-		jsonDataString = JSON.toJSONString(Response.respose(MsgEnum.SUCCESS, userFromServer));
-	    } else {
-		jsonDataString = JSON.toJSONString(Response.fail());
-	    }
-	} catch (Exception e) {
-	    jsonDataString = JSON.toJSONString(Response.fail(e.getMessage()));
-	    e.printStackTrace();
+	updCount = userService.insert(user, paramMap);
+	if (updCount > 0) {
+	    User userFromServer = userService.queryById(user.getUserId());
+	    jsonDataString = JSON.toJSONString(Response.respose(MsgEnum.SUCCESS, userFromServer));
+	} else {
+	    jsonDataString = JSON.toJSONString(Response.fail());
 	}
 
 	return jsonDataString;
@@ -201,20 +207,15 @@ public class UserController {
 
     @RequestMapping("/updateUser")
     @ResponseBody
-    public String updateUser(@RequestBody User user) {
+    public String updateUser(@RequestBody User user) throws Exception {
 	String msg;
 	user.setModifyTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
 
-	try {
-	    int updateCount = userService.update(user);
-	    if (updateCount > 0) {
-		msg = JSON.toJSONString(Response.success("用户信息更新成功！"));
-	    } else {
-		msg = JSON.toJSONString(Response.fail("用户信息更新失败！"));
-	    }
-	} catch (Exception e) {
-	    msg = JSON.toJSONString(Response.fail(e.getMessage()));
-	    e.printStackTrace();
+	int updateCount = userService.update(user);
+	if (updateCount > 0) {
+	    msg = JSON.toJSONString(Response.success("用户信息更新成功！"));
+	} else {
+	    msg = JSON.toJSONString(Response.fail("用户信息更新失败！"));
 	}
 
 	return msg;
@@ -230,6 +231,37 @@ public class UserController {
 	    return JSON.toJSONString(Response.success(result.get("msg")));
 	} else {
 	    return JSON.toJSONString(Response.fail(result.get("msg")));
+	}
+    }
+
+    /**
+     * 重置密码，清除用户登录限制记录信息
+     * 
+     * @param userId
+     * @param userName
+     * @return
+     */
+    @RequestMapping("/resetPassword")
+    @ResponseBody
+    public String resetPassword(@RequestParam(name = "userId", required = true) String userId,
+	    @RequestParam(name = "userName", required = true) String userName) {
+	User user = new User();
+	user.setUserId(userId);
+	user.setPassword(EncryptionUtil.md5Encode("88888888"));
+	int result = userService.updatePasswordReset(user);
+	if (result > 0) {
+	    // 失败登录次数计数缓存
+	    Cache<String, AtomicInteger> attemptsCache = ehCacheManager.getCache("failLoginCount");
+	    // 限制登录时长计数缓存
+	    Cache<String, Date> limitTimer = ehCacheManager.getCache("limitTimer");
+	    String failLoginCountKey = "fail_login_attempts_" + userName;
+	    String limitTimerKey = "limit_login_timer_" + userName;
+	    // 密码重置成功，清除之前用户的登录失败信息记录
+	    attemptsCache.remove(failLoginCountKey);
+	    limitTimer.remove(limitTimerKey);
+	    return JSON.toJSONString(Response.success("密码已重置为：88888888，请通知【"+userName+"】尽快登录系统并修改密码！"));
+	} else {
+	    return JSON.toJSONString(Response.fail("密码重置失败！"));
 	}
     }
 
@@ -274,7 +306,7 @@ public class UserController {
 
     @RequestMapping("/delUsersById")
     @ResponseBody
-    public String delUsersById(@RequestParam(value = "userIds[]",defaultValue = "") List<String> userIds) {
+    public String delUsersById(@RequestParam(value = "userIds[]", defaultValue = "") List<String> userIds) {
 
 	String result = "";
 	int updUserCount = 0;

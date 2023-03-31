@@ -15,6 +15,7 @@ import com.ucan.base.response.Response;
 import com.ucan.entity.MutexRole;
 import com.ucan.entity.Role;
 import com.ucan.entity.RolePermission;
+import com.ucan.entity.User;
 import com.ucan.entity.UserRole;
 import com.ucan.entity.page.PageParameter;
 import com.ucan.entity.tree.response.DTreeResponse;
@@ -54,26 +55,22 @@ public class RoleController {
      * 
      * @param role
      * @return
+     * @throws Exception 
      */
     @RequestMapping("/addRole")
     @ResponseBody
-    public String addRole(Role role) {
+    public String addRole(Role role) throws Exception {
 	if (role.getPosition() == 0) {
 	    role.setPosition(1);
 	}
 	role.setIsSuper(0);
 	String msg;
-	try {
 	    int result = roleService.insert(role);
 	    if (result > 0) {
 		msg = JSON.toJSONString(Response.success("角色新增成功！"));
 	    } else {
 		msg = JSON.toJSONString(Response.fail("角色新增失败！"));
 	    }
-	} catch (Exception e) {
-	    msg = JSON.toJSONString(Response.fail(e.getMessage()));
-	    e.printStackTrace();
-	}
 	return msg;
     }
 
@@ -83,13 +80,13 @@ public class RoleController {
      * 
      * @param role
      * @return
+     * @throws Exception 
      */
     @RequestMapping("/deleteRole")
     @ResponseBody
     public String deleteRole(@RequestParam(name = "roleId") String roleId,
-	    @RequestParam(name = "position", defaultValue = "0") String position) {
+	    @RequestParam(name = "position", defaultValue = "0") String position) throws Exception {
 	String jsonString = "";
-	try {
 	    Role role = roleService.queryRoleById(roleId);
 	    if (role.getIsSuper() == 1) {
 		return JSON.toJSONString(Response.fail("不能删除超级管理员！"));
@@ -102,9 +99,6 @@ public class RoleController {
 	    } else {
 		jsonString = JSON.toJSONString(Response.fail("角色删除失败！"));
 	    }
-	} catch (Exception e) {
-	    e.printStackTrace();
-	}
 	return jsonString;
     }
 
@@ -113,25 +107,21 @@ public class RoleController {
      * 
      * @param role
      * @return
+     * @throws Exception 
      */
     @RequestMapping("/updateRole")
     @ResponseBody
-    public String updateRole(Role role) {
+    public String updateRole(Role role) throws Exception {
 	if (role.getPosition() == 0 && role.getIsSuper() != 1) {
 	    role.setPosition(1);
 	}
 	String msg;
-	try {
 	    int result = roleService.update(role);
 	    if (result > 0) {
 		msg = JSON.toJSONString(Response.success("角色信息修改成功！"));
 	    } else {
 		msg = JSON.toJSONString(Response.fail("角色信息修改失败！"));
 	    }
-	} catch (Exception e) {
-	    msg = JSON.toJSONString(Response.fail(e.getMessage()));
-	    e.printStackTrace();
-	}
 	return msg;
     }
 
@@ -270,23 +260,19 @@ public class RoleController {
      * @param roleId     要修改权限的角色Id
      * @param checkedIds 前端传入的权限Id
      * @return
+     * @throws Exception 
      */
     @RequestMapping("/updateRolePermissionRelation")
     @ResponseBody
     public String updateRolePermissionRelation(@RequestParam(name = "roleId", defaultValue = "") String roleId,
-	    @RequestParam(name = "checkedIds[]", required = false, defaultValue = "") List<String> checkedIds) {
+	    @RequestParam(name = "checkedIds[]", required = false, defaultValue = "") List<String> checkedIds) throws Exception {
 	String msg;
-	try {
 	    int result = rolePermissionService.updateRolePermissionRelation(roleId, checkedIds);
 	    if (result > 0) {
 		msg = JSON.toJSONString(Response.success("权限分配成功!"));
 	    } else {
 		msg = JSON.toJSONString(Response.fail("权限分配失败！"));
 	    }
-	} catch (Exception e) {
-	    msg = JSON.toJSONString(Response.fail(e.getMessage()));
-	    e.printStackTrace();
-	}
 	return msg;
     }
 
@@ -298,25 +284,21 @@ public class RoleController {
      * @param checkedOrgIds  前端传入的组织Id
      * @param checkedPostIds 前端传入的职位Id
      * @return
+     * @throws Exception 
      */
     @RequestMapping("/updateRoleOrgPostRelation")
     @ResponseBody
     public String updateRoleOrgPostRelation(@RequestParam(name = "roleId", defaultValue = "") String roleId,
 	    @RequestParam(name = "orgId", defaultValue = "") String orgId,
 	    @RequestParam(name = "checkedOrgIds[]", required = false, defaultValue = "") List<String> checkedOrgIds,
-	    @RequestParam(name = "checkedPostIds[]", required = false, defaultValue = "") List<String> checkedPostIds) {
+	    @RequestParam(name = "checkedPostIds[]", required = false, defaultValue = "") List<String> checkedPostIds) throws Exception {
 	String msg;
-	try {
 	    int result = roleService.updateRoleOrgPostRelation(roleId, orgId, checkedOrgIds, checkedPostIds);
 	    if (result > 0) {
 		msg = JSON.toJSONString(Response.success("角色已成功分配组织/职位!"));
 	    } else {
 		msg = JSON.toJSONString(Response.fail("角色分配组织/职位失败！"));
 	    }
-	} catch (Exception e) {
-	    msg = JSON.toJSONString(Response.fail(e.getMessage()));
-	    e.printStackTrace();
-	}
 	return msg;
     }
 

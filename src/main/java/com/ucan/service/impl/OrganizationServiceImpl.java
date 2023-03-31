@@ -6,7 +6,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ucan.base.exception.CustomException;
 import com.ucan.dao.OrganizationMapper;
 import com.ucan.dao.PostMapper;
 import com.ucan.dao.RoleMapper;
@@ -21,6 +20,7 @@ import com.ucan.entity.tree.node.OrgDTreeNode;
 import com.ucan.entity.tree.response.DTreeResponse;
 import com.ucan.entity.tree.response.Status;
 import com.ucan.entity.tree.status.OrgNodeStatus;
+import com.ucan.exception.CustomException;
 import com.ucan.service.IOrganizationService;
 import com.ucan.utils.UUIDUtil;
 

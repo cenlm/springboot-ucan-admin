@@ -676,6 +676,7 @@ layui.config({
 	
 	dtree.renderSelect({
 	    elem: "#mutexRoleSelect",
+	    skin:"authz",
 	    url:context_path + "/role/getRoleTreeNodes",
 	    selectTips: "--------------------请选择角色---------------------"
 	  });
@@ -1735,6 +1736,7 @@ layui.config({
 		          width: "100%",
 				accordion: false,
 				line: true,
+				skin:"authz",
 				iconfont: ["layui-icon", "dtreefont", "iconfont"],
 		          url: context_path +  "/role/getRoleTreeNodes",
 		        });

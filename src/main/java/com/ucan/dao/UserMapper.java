@@ -12,7 +12,6 @@ import com.ucan.entity.User;
  */
 
 public interface UserMapper extends BaseDao<User> {
-    int updatePassword(User user);
 
     /**
      * 添加<用户-职位>关系映射
@@ -111,6 +110,15 @@ public interface UserMapper extends BaseDao<User> {
      * @return
      */
     int updatePassword(Map<String, String> paramMap);
+    
+    /**
+     * 重置密码
+     * 
+     * @param userId
+     * @param password
+     * @return
+     */
+    int updatePasswordReset(User user);
 
     /**
      * 个人设置页详情内容
