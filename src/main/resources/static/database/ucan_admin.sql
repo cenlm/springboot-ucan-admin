@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50733
 File Encoding         : 65001
 
-Date: 2023-03-11 10:23:33
+Date: 2023-03-31 14:19:34
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -144,6 +144,7 @@ INSERT INTO `permissions` VALUES ('10e02c7c1045450b8ac9943d6c879ae0', '权限配
 INSERT INTO `permissions` VALUES ('1332e7f059c34019953a40c6f6ffbecf', '互斥角色查看', 'Data:MUTEX_ROLE_VIEW', '2', '0cdc8d9d237042d9bdabc7ef338c5121', '5', '互斥角色查看-按钮', '2023-03-01 20:36:22', '2023-03-01 20:39:35', '', '', 'layui-icon layui-icon-form');
 INSERT INTO `permissions` VALUES ('17c4711fdf9a4ae8932b54dfde9a3545', '用户列表-用户详细信息', 'Btn:USER_DETAIL', '2', 'caeb961545ce4c029a5517a99c09a52f', '5', '用户列表-行内工具条-查看按钮（附带修改功能）', '2023-03-01 20:14:11', '2023-03-02 09:46:13', '', '', 'layui-icon layui-icon-form');
 INSERT INTO `permissions` VALUES ('1853452ed8a14cc1940100ee772978a9', '新增权限', 'Btn:PERMS_ADD', '2', '00c0a20421a5483d8fa8030ead0acc06', '0', '新增权限（非子权限）', '2023-03-01 19:58:17', '2023-03-01 20:07:36', '', '', 'layui-icon layui-icon-add-1');
+INSERT INTO `permissions` VALUES ('28a98509312a4b019097f1ede25d5ca6', '重置密码', 'Btn:USER_RESET_PASSWORD', '2', 'caeb961545ce4c029a5517a99c09a52f', '3', '重置密码为：88888888', '2023-03-31 11:23:28', '2023-03-31 11:23:58', '', '', 'layui-icon layui-icon-set');
 INSERT INTO `permissions` VALUES ('31f31c7446784ca69abdda67d95b805b', '用户状态修改', 'Btn:USER_STATUS_UPD', '2', 'caeb961545ce4c029a5517a99c09a52f', '4', '用户列表-点击复选框修改用户状态', '2023-03-01 20:41:49', '2023-03-01 20:47:37', '', '', 'layui-icon layui-icon-set');
 INSERT INTO `permissions` VALUES ('3a99e59a5d1041c5a6662bed88f8c7ec', '删除互斥角色', 'Btn:MUTEX_ROLE_DEL', '2', '0cdc8d9d237042d9bdabc7ef338c5121', '5', '删除互斥角色-按钮', '2023-03-01 20:39:17', null, '', '', 'layui-icon layui-icon-delete');
 INSERT INTO `permissions` VALUES ('4835a1dbbba34c2082e001f3e666f67b', '删除用户', 'Btn:USER_DEL', '2', 'caeb961545ce4c029a5517a99c09a52f', '2', '', '2023-02-15 22:33:57', '2023-03-01 19:14:23', '', '', 'layui-icon layui-icon-delete');
@@ -323,6 +324,7 @@ INSERT INTO `role_permission` VALUES ('5f68648f4ee24982a629b0923cf3c1a1', '10e02
 INSERT INTO `role_permission` VALUES ('5f68648f4ee24982a629b0923cf3c1a1', '1332e7f059c34019953a40c6f6ffbecf', null);
 INSERT INTO `role_permission` VALUES ('5f68648f4ee24982a629b0923cf3c1a1', '17c4711fdf9a4ae8932b54dfde9a3545', null);
 INSERT INTO `role_permission` VALUES ('5f68648f4ee24982a629b0923cf3c1a1', '1853452ed8a14cc1940100ee772978a9', null);
+INSERT INTO `role_permission` VALUES ('5f68648f4ee24982a629b0923cf3c1a1', '28a98509312a4b019097f1ede25d5ca6', null);
 INSERT INTO `role_permission` VALUES ('5f68648f4ee24982a629b0923cf3c1a1', '31f31c7446784ca69abdda67d95b805b', null);
 INSERT INTO `role_permission` VALUES ('5f68648f4ee24982a629b0923cf3c1a1', '3a99e59a5d1041c5a6662bed88f8c7ec', null);
 INSERT INTO `role_permission` VALUES ('5f68648f4ee24982a629b0923cf3c1a1', '4835a1dbbba34c2082e001f3e666f67b', null);
@@ -452,11 +454,11 @@ CREATE TABLE `users` (
 -- ----------------------------
 -- Records of users
 -- ----------------------------
-INSERT INTO `users` VALUES ('00dc3d392604422a91850d6c4f9071ec', '司马光', 'd93ae65992caf6a8751e334d0a716ad8', '司马光', '1', '1', '15678905678', '广东省广州天河区棠下街18号', null, null, 'simaguang@qq.com', '0', '2023-03-04 23:02:46', null, '总部采购部经理。');
-INSERT INTO `users` VALUES ('088807739b4940b8865fc8bd3b103b2c', '小王', 'd93ae65992caf6a8751e334d0a716ad8', '王老吉', '1', '1', '15678905678', '广东省广州天河区车陂路55号', '2023-03-09 17:45:07', '2023-03-08 23:11:44', 'xiaowang@qq.com', '0', '2023-03-03 23:18:21', '2023-03-04 22:39:25', '我是公司总部会计。');
+INSERT INTO `users` VALUES ('00dc3d392604422a91850d6c4f9071ec', '司马光', 'd93ae65992caf6a8751e334d0a716ad8', '司马光', '1', '1', '15678905678', '广东省广州天河区棠下街18号', null, null, 'simaguang@qq.com', '0', '2023-03-04 23:02:46', '2023-03-31 11:29:55', '总部采购部经理。');
+INSERT INTO `users` VALUES ('088807739b4940b8865fc8bd3b103b2c', '小王', 'd93ae65992caf6a8751e334d0a716ad8', '王老吉', '1', '1', '15678905678', '广东省广州天河区车陂路55号', '2023-03-31 14:19:07', '2023-03-31 14:18:37', 'xiaowang@qq.com', '0', '2023-03-03 23:18:21', '2023-03-04 22:39:25', '我是公司总部会计。');
 INSERT INTO `users` VALUES ('0d7990fe32794a678e56b7c1a20e054e', '成吉思汗', 'd93ae65992caf6a8751e334d0a716ad8', '可汗', '1', '1', '18976864732', '广东省广州天河区棠下街88号', null, null, 'kehan@qq.com', '0', '2023-03-04 22:47:34', null, '总部财务总监');
 INSERT INTO `users` VALUES ('1246b5d25ccf436dac2a54678c8dd154', '李白', 'd93ae65992caf6a8751e334d0a716ad8', '李诗人', '1', '1', '15678905678', '广东省广州天河区车陂路52号', null, null, 'libai@qq.com', '0', '2023-03-04 23:06:18', null, '总部采购部订单管理员。');
-INSERT INTO `users` VALUES ('1e14f9d41d454b4b9234256f6a70f34c', 'admin', 'd93ae65992caf6a8751e334d0a716ad8', '超级管理员', '1', '1', '18976864700', '广东省广州天河区棠下街18号', '2023-03-09 21:46:08', '2023-03-09 20:58:59', 'admin@qq.com', '1', '2023-01-03 21:16:54', '2023-03-02 16:39:56', '我是超级管理员，拥有系统的所有角色与权限！对我温柔点，否则删库跑路，后果自负~');
+INSERT INTO `users` VALUES ('1e14f9d41d454b4b9234256f6a70f34c', 'admin', 'd93ae65992caf6a8751e334d0a716ad8', '超级管理员', '1', '1', '18976864700', '广东省广州天河区棠下街18号', '2023-03-31 14:18:16', '2023-03-31 13:38:33', 'admin@qq.com', '1', '2023-01-03 21:16:54', '2023-03-31 12:43:28', '我是超级管理员，拥有系统的所有角色与权限！对我温柔点，否则删库跑路，后果自负');
 INSERT INTO `users` VALUES ('32a1566a2c8f4b389715589b3432f228', '王昭君', 'd93ae65992caf6a8751e334d0a716ad8', '王昭君', '1', '0', '15678904567', '广东省广州天河区车陂路52号', null, null, 'wzj@qq.com', '0', '2023-03-04 23:25:38', null, '广州分公司财务部会计。');
 INSERT INTO `users` VALUES ('489449077b3146f2b1653cc0df7b7e14', '陶行知', 'd93ae65992caf6a8751e334d0a716ad8', '陶行知', '1', '1', '15678905678', '广东省广州天河区车陂路55号', null, null, 'txz@qq.com', '0', '2023-03-04 23:26:47', null, '广州分公司财务部财务审核员。');
 INSERT INTO `users` VALUES ('59f4a243d3014c31b69a8e94292e4174', '屈原', 'd93ae65992caf6a8751e334d0a716ad8', '屈原', '1', '1', '15678904567', '广东省广州天河区棠下街98号', '', '', 'qinshihuang@qq.com', '0', '2023-03-04 23:04:36', '2023-03-04 23:30:12', '总部采购部工程师。');
