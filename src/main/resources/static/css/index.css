@@ -100,7 +100,7 @@
 	1.header导航条高度60px，所以calc(100vh - 60px)
 	2.iframe-body高度：calc(100vh - 110px - 6px)，116px = header导航条高度60px+面包屑导航条高度及上下边距各3px
 	*/
-	height: calc(100vh - 60px);
+	height: 110vh;
 }
 
 .left-menu-container ul li {
@@ -144,9 +144,14 @@
 	background-color: #E8EBF4;
 	color: #ffffff;
 	margin-top: 3px;
-	height: calc(100vh - 153px);
+	height: calc(100vh - 75.2px);
 	background-color: #E8EBF4;
 }
+
+  /* 隐藏浏览器滚动条 */
+::-webkit-scrollbar { 
+      display: none;
+    }
 
 /*网站底部*/
 .web-footer {

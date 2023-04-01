@@ -13,6 +13,34 @@ body {
 	/*字体在layui.css中修改*/
 	/* font-family: "阿里巴巴普惠体 H";  */ /*H B M R*/
 }
+
+.layui-tab-item {
+	width: 100%;
+	height: 100%;
+}
+
+.layui-tab-title {
+	background-color: #F7F8FB;
+	width: 100%;
+}
+
+.layui-tab-title li {
+	color:#252525;
+	background-color: #FAFAFA;
+	border-color:#434343;
+	border-left:solid;
+	border-right:solid;
+	border-width:1px;
+	border-color: #E3E3E3;
+}
+
+.layui-this {
+	font-weight: bold;
+}
+
+.layui-tab-title li .layui-tab-close:hover{
+    background-color: #5B54B1;
+}
 </style>
 </head>
 <body>
@@ -21,7 +49,7 @@ body {
 		<!-- 头部 -->
 		<div class="layui-row top-nav">
 			<!-- logo或文字 -->
-			<div class="layui-col-md2 layui-col-lg2"><a href="${contextPath}/board" target="index_iframe" style="color:#ffffff;">Ucan权限管理系统</a></div>
+			<div class="layui-col-md2 layui-col-lg2"><a href="javascript:;" class="ucan_board" style="color:#ffffff;">Ucan权限管理系统</a></div>
 			<!-- 其他导航信息 -->
 			<div class=" layui-col-md3 layui-col-lg3 "></div>
 			<div class=" layui-col-md6 layui-col-lg6">
@@ -45,9 +73,8 @@ body {
 							class="layui-nav-img"></a>
 						<dl class="layui-nav-child">
 							<@shiro.hasPermission name="Menu:PERSONAL_SET">
-								<dd>
-									<a href="${contextPath}/user/user_setting"
-										target="index_iframe">个人设置</a>
+							<dd id="user_setting">
+									<a href="javascript:;">个人设置</a>
 								</dd>
 								<hr>
 							</@shiro.hasPermission>
@@ -70,7 +97,7 @@ body {
 					lay-filter="left-nav">
 					<!-- 侧边导航: <ul class="layui-nav layui-nav-tree layui-nav-side"> -->
 					<@shiro.hasPermission name="Menu:HOME_VIEW">
-						<li class="layui-nav-item"><a href="${contextPath}/board" target="index_iframe"><i
+						<li class="layui-nav-item"><a href="javascript:;" class="ucan_board"><i
 								class="layui-icon layui-icon-console"
 								style="font-size: 16px; color: #ffffff; margin-right: 6%;"></i><cite>仪表盘</cite></a></li>
 					</@shiro.hasPermission>
@@ -80,21 +107,20 @@ body {
 								style="font-size: 16px; color: #ffffff; margin-right: 6%;"></i><cite>系统管理</cite></a>
 							<dl class="layui-nav-child layui-nav-child-c">
 								<@shiro.hasPermission name="Menu:USER_MANAGE">
-									<dd>
-										<a href="${contextPath}/user/user_list"
-											target="index_iframe">用户管理</a>
+										<dd id="user_manager">
+										<a href="javascript:;">用户管理</a>
 									</dd>
 								</@shiro.hasPermission>
 								<@shiro.hasPermission name="Menu:ROLE_MANAGE">
-									<dd>
-										<a href="${contextPath}/role/role_list"
-											target="index_iframe">角色管理</a>
+									<dd id="role_manager">
+										<a href="javascript:;">角色管理</a>
 									</dd>
 								</@shiro.hasPermission>
 								<@shiro.hasPermission name="Menu:PERMS_MANAGE">
 									<dd>
-										<a href="${contextPath}/permission/permission_list"
-											target="index_iframe">权限管理</a>
+										<dd id="permission_manager">
+										<a href="javascript:;">权限管理</a>
+									</dd>
 									</dd>
 								</@shiro.hasPermission>
 							</dl></li>
@@ -113,27 +139,24 @@ body {
 				</span>
 			</div>
 			<!-- iframe -->
-			<div class=" layui-col-md10 layui-col-lg10 iframe-body right-element">
-				<iframe name="index_iframe" frameborder="0"
-					style="width: 100%; height: 100%;" src="${contextPath}/board"></iframe>
+				<div class=" layui-col-md10 layui-col-lg10 iframe-body right-element">
+				<div class="layui-tab layui-tab-card" lay-filter="index-content"
+					lay-allowclose="true">
+					<ul class="layui-tab-title"></ul>
+					<div class="layui-tab-content iframe-body"></div>
+				</div>
 			</div>
 			<!-- 网站底部 -->
-			<div class=" layui-col-md10 layui-col-lg10 web-footer right-element">
+		<!-- 	<div class=" layui-col-md10 layui-col-lg10 web-footer right-element">
 				&copy;2023 / UI：layui v2.7.6</div>
-		</div>
+		</div> -->
 	</div>
 	<script src="js/layui/layui.js"></script>
 	<script src="js/jquery-3.6.3.min.js"></script>
 	<script src="js/jquery-migrate-1.2.1.min.js"></script>
 	<script src="js/index.js"></script>
 	<script>
-		layui.use([ 'element' , 'layer' ] , function() {
-	                var element = layui.element; //导航的hover效果、二级菜单等功能，需要依赖element模块
-	                //监听导航点击
-	                element.on('nav(left-nav)' , function(elem) {
-
-	                });
-                });
+	  var context_path = "${contextPath}";
 	</script>
 </body>
 </html>
