@@ -101,7 +101,7 @@ layui.use([ 'element' , 'layer' ] , function() {
         	let iframeId= "user_setting_iframe";
         	let url = context_path + "/user/user_setting";
             	if($("li[lay-id='user_setting']").text()!=""){
-            		element.tabChange('index-content' , 'permission');
+            		element.tabChange('index-content' , 'user_setting');
             		active.refreshIframe(iframeId,url);
             		return;
             	}
