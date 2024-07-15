@@ -17,7 +17,7 @@ import com.ucan.entity.tree.response.DTreeResponse;
 import com.ucan.entity.tree.response.Status;
 import com.ucan.exception.CustomException;
 import com.ucan.service.IPostService;
-import com.ucan.utils.UUIDUtil;
+import com.ucan.util.UUIDUtil;
 
 /**
  * @Description:职位信息

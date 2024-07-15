@@ -1,4 +1,4 @@
-package com.ucan.utils.page;
+package com.ucan.util.page;
 
 import com.ucan.entity.page.PageParameter;
 

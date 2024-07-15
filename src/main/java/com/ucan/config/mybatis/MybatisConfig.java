@@ -11,37 +11,40 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 
-import com.ucan.interceptors.PageInterceptor;
+import com.ucan.interceptor.PageInterceptor;
 
 /**
- * @Description: mybatis配置类
+ * @deprecated
+ * @Description: mybatis配置类（已废弃）
  * @author liming.cen
  * @date 2023-03-21 18:19:40
  * 
  */
-@Configuration
-@MapperScan(basePackages="com.ucan.dao")
+
+/*
+ * @Configuration
+ * 
+ * @MapperScan(basePackages = "com.ucan.dao")
+ */
+
 public class MybatisConfig {
-    @Autowired
-    private DataSource dataSource;
-    @Autowired
-    private ApplicationContext context;
-
-    @Bean
-    public SqlSessionFactory sqlSessionFactory() throws Exception {
-	SqlSessionFactoryBean factoryBean = new SqlSessionFactoryBean();
-	factoryBean.setDataSource(dataSource);
-	factoryBean.setMapperLocations(context.getResources("classpath:/mappers/*.xml"));
-	return factoryBean.getObject();
-    }
-
-    /**
-     * 分页拦截器
+    /*
+     * @Autowired private DataSource dataSource;
      * 
-     * @return
-     */
-    @Bean
-    public PageInterceptor pageInterceptor() {
-	return new PageInterceptor();
-    }
+     * @Autowired private ApplicationContext context;
+     * 
+     * @Bean public SqlSessionFactory sqlSessionFactory() throws Exception {
+     * SqlSessionFactoryBean factoryBean = new SqlSessionFactoryBean();
+     * factoryBean.setDataSource(dataSource);
+     * factoryBean.setMapperLocations(context.getResources(
+     * "classpath:/mappers/*.xml")); return factoryBean.getObject(); }
+     * 
+     *//**
+        * 分页拦截器
+        * 
+        * @return
+        *//*
+	   * @Bean public PageInterceptor pageInterceptor() { return new
+	   * PageInterceptor(); }
+	   */
 }

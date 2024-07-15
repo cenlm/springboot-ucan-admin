@@ -7,6 +7,8 @@ import com.ucan.base.BaseDao;
 import com.ucan.entity.User;
 
 /**
+ * 用户数据持久层
+ * 
  * @author liming.cen
  * @date 2022年12月23日 下午8:36:11
  */
@@ -110,7 +112,7 @@ public interface UserMapper extends BaseDao<User> {
      * @return
      */
     int updatePassword(Map<String, String> paramMap);
-    
+
     /**
      * 重置密码
      * 
@@ -123,11 +125,17 @@ public interface UserMapper extends BaseDao<User> {
     /**
      * 个人设置页详情内容
      * 
-     * @param userId
+     * @param map
      * @return
      */
-    List<User> queryUserDetail(String userId);
-
-   
+    List<User> queryUserDetail(Map<String, String> map);
+    
+    /**
+     * 通过用户名查询用户数（用于新增、修改用户信息时的检测）
+     * 
+     * @param user
+     * @return 用户数统计
+     */
+    int queryUsersCountByName(String userName);
 
 }

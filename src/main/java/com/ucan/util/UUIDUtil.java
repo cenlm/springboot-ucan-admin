@@ -1,4 +1,4 @@
-package com.ucan.utils;
+package com.ucan.util;
 
 import java.util.UUID;
 

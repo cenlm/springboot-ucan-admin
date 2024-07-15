@@ -1,4 +1,4 @@
-package com.ucan.utils;
+package com.ucan.shiro.util;
 
 import org.apache.shiro.codec.CodecException;
 import org.apache.shiro.crypto.UnknownAlgorithmException;

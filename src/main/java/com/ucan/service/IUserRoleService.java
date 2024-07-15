@@ -9,39 +9,6 @@ import com.ucan.entity.UserRole;
  * @date 2022年12月24日 下午5:56:36
  */
 public interface IUserRoleService {
-//    /**
-//     * 新增 <用户-角色> 映射记录
-//     * 
-//     * @param ur
-//     * @return
-//     */
-//    int insert(UserRole ur);
-//
-//    /**
-//     * 查询用户已分配的 <用户ID-角色ID> 映射记录
-//     * 
-//     * @param userId
-//     * @return
-//     */
-//    List<UserRole> queryRolesByUserId(String userId);
-//
-//    List<UserRole> queryByPage(String userId);
-//
-//    /**
-//     * 按userId删除 <用户ID-角色ID> 映射记录
-//     * 
-//     * @param userId
-//     * @return
-//     */
-//    int deleteUserRoleByUserId(String userId);
-//
-//    /**
-//     * 查询用户已分配的角色数量
-//     * 
-//     * @param userId
-//     * @return
-//     */
-//    int queryUserRoleCounts(String userId);
     /**
      * 查询用户角色
      * 

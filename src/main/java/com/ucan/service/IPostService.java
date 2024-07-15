@@ -15,7 +15,7 @@ public interface IPostService {
      * @param org
      * @return
      */
-    public int addPost(Post post) throws Exception;
+    int addPost(Post post) throws Exception;
 
     /**
      * 更新职位信息
@@ -23,7 +23,7 @@ public interface IPostService {
      * @param post
      * @return
      */
-    public int updatePost(Post post);
+    int updatePost(Post post);
 
     /**
      * 通过组织ID查询职位信息并返回节点树数据
@@ -31,7 +31,7 @@ public interface IPostService {
      * @param orgId
      * @return
      */
-    public DTreeResponse getPostNodesByOrgId(String orgId);
+    DTreeResponse getPostNodesByOrgId(String orgId);
 
     /**
      * 获取职位名称
@@ -39,7 +39,7 @@ public interface IPostService {
      * @param postId
      * @return
      */
-    public String getPostNameById(String postId);
+    String getPostNameById(String postId);
 
     /**
      * 通过职位Id删除职位
@@ -47,5 +47,5 @@ public interface IPostService {
      * @param postId
      * @return
      */
-    public int deletePostById(String postId) throws Exception;
+    int deletePostById(String postId) throws Exception;
 }

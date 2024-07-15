@@ -20,8 +20,7 @@
 		<result property="createTime" column="create_time" />
 		<result property="modifyTime" column="modify_time" />
 		<result property="remarks" column="remarks" />
-		<association property="post"
-			javaType="com.ucan.entity.Post">
+		<association property="post" javaType="com.ucan.entity.Post">
 			<result property="postName" column="post_name" />
 		</association>
 	</resultMap>
@@ -31,8 +30,7 @@
 		users(user_id,username,password,email,create_time,remarks,user_alias,is_enable,sex,cell_phone_number,address,is_super)values(#{userId},#{userName},#{password},#{email},#{createTime},#{remarks},#{userAlias},#{isEnable},#{sex},#{cellPhoneNumber},#{address},#{isSuper})
 	</insert>
 
-	<insert id="addUserPostMapping"
-		parameterType="java.util.HashMap">
+	<insert id="addUserPostMapping" parameterType="java.util.HashMap">
 		insert into
 		user_post(post_id,user_id)values(#{postId},#{userId})
 	</insert>
@@ -44,8 +42,7 @@
 
 	<delete id="deleteByIds">
 		delete from users where user_id in
-		<foreach collection="list" open="(" separator="," close=")"
-			item="userId">
+		<foreach collection="list" open="(" separator="," close=")" item="userId">
 			#{userId}
 		</foreach>
 		and is_super!=1
@@ -57,8 +54,7 @@
 
 	<delete id="deleteUserPostByUserIds">
 		delete from user_post where user_id in
-		<foreach collection="list" open="(" separator="," close=")"
-			item="userId">
+		<foreach collection="list" open="(" separator="," close=")" item="userId">
 			#{userId}
 		</foreach>
 	</delete>
@@ -73,8 +69,7 @@
 		select
 		count(*)
 		from user_post where user_id in
-		<foreach collection="list" open="(" separator="," close=")"
-			item="userId">
+		<foreach collection="list" open="(" separator="," close=")" item="userId">
 			#{userId}
 		</foreach>
 	</select>
@@ -170,8 +165,7 @@
 		</trim>
 	</select>
 
-	<select id="queryUsersByOrgIdsPageWithMap"
-		parameterType="java.util.HashMap" resultMap="userMap">
+	<select id="queryUsersByOrgIdsPageWithMap" parameterType="java.util.HashMap" resultMap="userMap">
 		SELECT u.user_id user_id,u.username username,'无' post_name,u.sex
 		sex,u.cell_phone_number
 		cell_phone_number,u.email email,u.is_enable
@@ -182,8 +176,7 @@
 		uo.user_id=u.user_id
 		WHERE
 		uo.org_id in
-		<foreach collection="orgIds" open="(" separator="," close=")"
-			item="orgId"> #{orgId} </foreach>
+		<foreach collection="orgIds" open="(" separator="," close=")" item="orgId"> #{orgId} </foreach>
 		<if test="username 
 			!= null and username != ''"> AND u.username like CONCAT('%',#{username},'%')
 		</if>
@@ -193,18 +186,19 @@
 		SELECT u.user_id user_id,u.username username,p.post_name
 		post_name,u.sex sex,u.cell_phone_number
 		cell_phone_number,u.email
-		email,u.is_enable is_enable,u.is_super
+		email,u.is_enable
+		is_enable,u.is_super
 		is_super from
 		user_organization
 		uo JOIN users u ON uo.user_id=u.user_id
 		join user_post up on
 		up.user_id=u.user_id
-		join post p on p.post_id=up.post_id
+		join post p on
+		p.post_id=up.post_id
 		WHERE
 		uo.org_id
 		in
-		<foreach collection="orgIds" open="(" separator="," close=")"
-			item="orgId"> #{orgId} </foreach>
+		<foreach collection="orgIds" open="(" separator="," close=")" item="orgId"> #{orgId} </foreach>
 		<if test="username 
 			!= null and username != ''"> AND u.username like CONCAT('%',#{username},'%')
 		</if>
@@ -214,7 +208,8 @@
 		SELECT u1.user_id,u1.username username,p.post_name
 		post_name,u1.sex sex,u1.cell_phone_number
 		cell_phone_number,u1.email
-		email,u1.is_enable is_enable,u1.is_super
+		email,u1.is_enable
+		is_enable,u1.is_super
 		is_super
 		from user_post
 		up JOIN
@@ -226,8 +221,7 @@
 		post_id FROM
 		post where org_id
 		in
-		<foreach collection="orgIds" open="(" separator="," close=")"
-			item="orgId">
+		<foreach collection="orgIds" open="(" separator="," close=")" item="orgId">
 			#{orgId}
 		</foreach>
 		<if test="username != null and username != ''">
@@ -239,15 +233,13 @@
 		) limit #{page.beginRow},#{page.pageSize}
 	</select>
 
-	<select id="queryUsersCountsByOrgIds" resultType="int"
-		parameterType="java.util.HashMap">
+	<select id="queryUsersCountsByOrgIds" resultType="int" parameterType="java.util.HashMap">
 		select count(*) from (
 		SELECT u.username username from
 		user_organization uo JOIN
 		users u ON uo.user_id=u.user_id WHERE
 		uo.org_id in
-		<foreach collection="orgIds" open="(" separator="," close=")"
-			item="orgId"> #{orgId} </foreach>
+		<foreach collection="orgIds" open="(" separator="," close=")" item="orgId"> #{orgId} </foreach>
 		<if test="username 
 			!= null and username != ''"> AND u.username like CONCAT('%',#{username},'%')
 		</if>
@@ -261,8 +253,7 @@
 		where
 		org_id
 		in
-		<foreach collection="orgIds" open="(" separator="," close=")"
-			item="orgId">
+		<foreach collection="orgIds" open="(" separator="," close=")" item="orgId">
 			#{orgId}
 		</foreach>
 		<if test="username != null and username != ''">
@@ -274,12 +265,12 @@
 		)) u2
 	</select>
 
-	<select id="queryUsersByPostId"
-		parameterType="java.util.HashMap" resultMap="userMap">
+	<select id="queryUsersByPostId" parameterType="java.util.HashMap" resultMap="userMap">
 		SELECT u1.user_id user_id,u1.username username,u1.sex
 		sex,u1.cell_phone_number
 		cell_phone_number,u1.email email,u1.is_enable
-		is_enable,u1.is_super is_super,p.post_name post_name
+		is_enable,u1.is_super
+		is_super,p.post_name post_name
 		from user_post
 		up
 		JOIN users u1 ON up.user_id=u1.user_id
@@ -296,8 +287,7 @@
 		limit #{page.beginRow},#{page.pageSize}
 	</select>
 
-	<select id="queryCountByPostId"
-		parameterType="java.util.HashMap" resultType="int">
+	<select id="queryCountByPostId" parameterType="java.util.HashMap" resultType="int">
 		SELECT count(*) from user_post
 		up JOIN users u1 ON
 		up.user_id=u1.user_id WHERE up.post_id
@@ -310,33 +300,64 @@
 		</if>
 	</select>
 
+	<select id="queryUsersCountByName" resultType="int">
+		select count(username) from users where username=#{userName}
+	</select>
+
 	<select id="queryUserDetail" resultMap="userMap">
 		SELECT u.username
-		username,u.email email,u.cell_phone_number cell_phone_number
-		,u.address address,u.user_alias
-		user_alias,concat(o.org_name,'-',p.post_name) post_name,u.create_time
-		create_time,u.modify_time modify_time,
-		u.entry_date
-		entry_date,u.last_login last_login,u.is_enable is_enable,u.sex
-		sex,u.remarks remarks
-		from users u
-		JOIN user_post up on
-		u.user_id=up.user_id
-		JOIN post p on up.post_id=p.post_id
-		JOIN
-		organization o ON o.org_id=p.org_id
-		where u.user_id=#{userId}
-		union
-		SELECT u.username username,u.email email,u.cell_phone_number
+		username,u.email email,u.cell_phone_number
 		cell_phone_number
-		,u.address address,u.user_alias user_alias,'无'
+		,u.address
+		address,u.user_alias
+		user_alias,concat(o.org_name,'-',p.post_name)
+		post_name,u.create_time
+		create_time,u.modify_time
+		modify_time,
+		u.entry_date
+		entry_date,u.last_login
+		last_login,u.is_enable is_enable,u.sex
+		sex,u.remarks remarks from
+		users u
+		JOIN
+		user_post
+		up on
+		u.user_id=up.user_id JOIN post p on
+		up.post_id=p.post_id
+		JOIN
+		organization o
+		ON
+		o.org_id=p.org_id
+		<where>
+			<choose>
+				<when test="userId != null and userId !=''"> u.user_id=#{userId}
+				</when>
+				<otherwise> u.username=#{userName}
+				</otherwise>
+			</choose>
+		</where>
+		union
+		SELECT u.username
+		username,u.email
+		email,u.cell_phone_number
+		cell_phone_number ,u.address
+		address,u.user_alias
+		user_alias,'无'
 		post_name,u.create_time
 		create_time,u.modify_time modify_time,
-		u.entry_date entry_date,u.last_login last_login,u.is_enable
+		u.entry_date
+		entry_date,u.last_login
+		last_login,u.is_enable
 		is_enable,u.sex
-		sex,u.remarks remarks
-		from users u
-		where
-		u.user_id=#{userId}
+		sex,u.remarks
+		remarks from users u
+		<where>
+			<choose>
+				<when test="userId != null and userId !=''"> u.user_id=#{userId}
+				</when>
+				<otherwise> u.username=#{userName}
+				</otherwise>
+			</choose>
+		</where>
 	</select>
 </mapper>

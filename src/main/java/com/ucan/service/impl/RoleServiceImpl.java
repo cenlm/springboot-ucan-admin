@@ -24,7 +24,7 @@ import com.ucan.entity.tree.response.DTreeResponse;
 import com.ucan.entity.tree.response.Status;
 import com.ucan.exception.CustomException;
 import com.ucan.service.IRoleService;
-import com.ucan.utils.UUIDUtil;
+import com.ucan.util.UUIDUtil;
 
 /**
  * 角色信息服务实现类

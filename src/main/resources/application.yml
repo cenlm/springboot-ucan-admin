@@ -1,8 +1,14 @@
 server:
   servlet:
     context-path: /ucan-admin
+    encoding:
+      charset: UTF-8
+      force: true
+      
 
 spring:
+  application:
+    name: ucan-admin
   profiles:
     active: dev
    
@@ -17,8 +23,9 @@ spring:
    
     view:
       prefix: /templates/
-      suffix: .ftl
+      suffix: .ftl     
       
+               
   freemarker:
     cache: false
     charset: UTF-8
@@ -34,6 +41,10 @@ spring:
     
   main:
     allow-circular-references: true    
+    
+mybatis:
+  mapper-locations:
+  - classpath:/mappers/*.xml  
       
 logging:
   config: classpath:log4j2.xml

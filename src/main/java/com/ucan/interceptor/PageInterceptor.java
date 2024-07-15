@@ -1,4 +1,4 @@
-package com.ucan.interceptors;
+package com.ucan.interceptor;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -21,6 +21,7 @@ import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.SystemMetaObject;
 import org.apache.ibatis.scripting.defaults.DefaultParameterHandler;
 import org.apache.ibatis.session.Configuration;
+import org.springframework.stereotype.Component;
 
 import com.ucan.entity.page.PageParameter;
 
@@ -29,6 +30,7 @@ import com.ucan.entity.page.PageParameter;
  * @author liming.cen
  * @date 2023年1月10日 上午9:09:08
  */
+@Component
 @Intercepts({
 	@Signature(type = StatementHandler.class, method = "prepare", args = { Connection.class, Integer.class }) })
 public class PageInterceptor implements Interceptor {
@@ -61,7 +63,7 @@ public class PageInterceptor implements Interceptor {
 		metaObject.setValue("delegate.boundSql.sql", pageSql);
 		int totalCounts = getTotalCounts(con, sql, mappedStatement, boundSql);
 		setPageParameter(page, totalCounts);
-		
+
 	    }
 	}
 

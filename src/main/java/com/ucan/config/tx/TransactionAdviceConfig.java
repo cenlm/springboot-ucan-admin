@@ -20,7 +20,7 @@ import org.springframework.transaction.interceptor.TransactionAttribute;
 import org.springframework.transaction.interceptor.TransactionInterceptor;
 
 /**
- * @Description: 事务配置（啥玩意？怎么感觉比xml配置还麻烦。。。）
+ * @Description: 全局事务配置（啥玩意？怎么感觉比xml配置还麻烦。。。）
  * @author liming.cen
  * @date 2023-03-21 18:45:56
  * 
