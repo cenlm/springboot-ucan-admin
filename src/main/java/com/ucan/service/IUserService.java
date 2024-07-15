@@ -3,7 +3,6 @@ package com.ucan.service;
 import java.util.List;
 import java.util.Map;
 
-import com.ucan.entity.Organization;
 import com.ucan.entity.User;
 
 /**
@@ -132,8 +131,16 @@ public interface IUserService {
     /**
      * 个人设置页详情内容
      * 
-     * @param userId
+     * @param user
      * @return
      */
-    List<User> queryUserDetail(String userId);
+    List<User> queryUserDetail(User user);
+    
+    /**
+     * 通过用户名查询用户数（用于新增、修改用户信息时的检测）
+     * 
+     * @param user
+     * @return 用户数统计
+     */
+    int queryUsersCountByName(String userName);
 }

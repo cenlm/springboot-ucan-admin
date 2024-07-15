@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.cache.Cache;
 import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +28,8 @@ import com.ucan.entity.page.PageParameter;
 import com.ucan.service.IOrganizationService;
 import com.ucan.service.IUserOrgService;
 import com.ucan.service.IUserService;
-import com.ucan.utils.EncryptionUtil;
-import com.ucan.utils.page.PageUtil;
+import com.ucan.shiro.util.EncryptionUtil;
+import com.ucan.util.page.PageUtil;
 
 /**
  * @author liming.cen
@@ -51,26 +50,26 @@ public class UserController {
 
     @RequestMapping("/user_list")
     public String toAddUserPage() {
-	return "user/user_list";
+        return "user/user_list";
     }
 
     @RequestMapping("/user_setting")
     public String toUserSetting() {
-	return "user/user_setting";
+        return "user/user_setting";
     }
 
     @RequestMapping("/queryUserByPage")
     @ResponseBody
     public String queryUserByPage(User user, @RequestParam(name = "currentPage", defaultValue = "1") String currentPage,
-	    @RequestParam(name = "pageSize", defaultValue = "5") String pageSize) {
-	PageParameter page = new PageParameter(currentPage, pageSize);
-	user.setPage(page);
-	List<User> users = userService.queryUserByPage(user);
-	if (users.size() > 0) {
-	    return JSON.toJSONString(Response.respose(MsgEnum.SUCCESS, users, page));
-	} else {
-	    return JSON.toJSONString(Response.respose(MsgEnum.FAIL.getCode(), "没有查询到数据", users, page));
-	}
+            @RequestParam(name = "pageSize", defaultValue = "5") String pageSize) {
+        PageParameter page = new PageParameter(currentPage, pageSize);
+        user.setPage(page);
+        List<User> users = userService.queryUserByPage(user);
+        if (users.size() > 0) {
+            return JSON.toJSONString(Response.respose(MsgEnum.SUCCESS, users, page));
+        } else {
+            return JSON.toJSONString(Response.respose(MsgEnum.FAIL.getCode(), "没有查询到数据", users, page));
+        }
 
     }
 
@@ -85,16 +84,16 @@ public class UserController {
     @RequestMapping("/getUserOrgByPage")
     @ResponseBody
     public String getUserOrgByPage(UserOrganization userOrganization,
-	    @RequestParam(name = "currentPage", defaultValue = "1") String currentPage,
-	    @RequestParam(name = "pageSize", defaultValue = "5") String pageSize) {
-	PageParameter page = new PageParameter(currentPage, pageSize);
-	userOrganization.setPage(page);
-	List<UserOrganization> userOrgs = userOrgService.getUserOrgByPage(userOrganization);
-	if (userOrgs.size() > 0) {
-	    return JSON.toJSONString(Response.respose(MsgEnum.SUCCESS, userOrgs, page));
-	} else {
-	    return JSON.toJSONString(Response.respose(MsgEnum.FAIL.getCode(), "没有查询到数据", userOrgs, page));
-	}
+            @RequestParam(name = "currentPage", defaultValue = "1") String currentPage,
+            @RequestParam(name = "pageSize", defaultValue = "5") String pageSize) {
+        PageParameter page = new PageParameter(currentPage, pageSize);
+        userOrganization.setPage(page);
+        List<UserOrganization> userOrgs = userOrgService.getUserOrgByPage(userOrganization);
+        if (userOrgs.size() > 0) {
+            return JSON.toJSONString(Response.respose(MsgEnum.SUCCESS, userOrgs, page));
+        } else {
+            return JSON.toJSONString(Response.respose(MsgEnum.FAIL.getCode(), "没有查询到数据", userOrgs, page));
+        }
 
     }
 
@@ -111,27 +110,27 @@ public class UserController {
     @RequestMapping("/queryUserByOrgIdPage")
     @ResponseBody
     public String queryUserByOrgIdPage(Organization org,
-	    @RequestParam(name = "username", defaultValue = "") String username,
-	    @RequestParam(name = "isEnable", defaultValue = "") String isEnable,
-	    @RequestParam(name = "currentPage", defaultValue = "1") String currentPage,
-	    @RequestParam(name = "pageSize", defaultValue = "5") String pageSize) {
-	List<String> orgIds = organizationService.getAllChildrenIdsByOrgId(org.getOrgId());
-	PageParameter page = new PageParameter(currentPage, pageSize);
-	Map<String, Object> map = new HashMap<>();
-	map.put("username", username);
-	map.put("isEnable", isEnable);
-	map.put("page", page);
-	map.put("orgIds", orgIds);
-	// 查询总记录数
-	int totalCount = userService.queryUsersCountsByOrgIds(map);
-	// 设置分页参数和总记录数
-	PageUtil.setPageParameter(page, totalCount);
-	List<User> users = userService.queryUsersByOrgIdsPageWithMap(map);
-	if (users.size() > 0) {
-	    return JSON.toJSONString(Response.respose(MsgEnum.SUCCESS, users, page));
-	} else {
-	    return JSON.toJSONString(Response.respose(MsgEnum.FAIL.getCode(), "没有查询到数据", users, page));
-	}
+            @RequestParam(name = "username", defaultValue = "") String username,
+            @RequestParam(name = "isEnable", defaultValue = "") String isEnable,
+            @RequestParam(name = "currentPage", defaultValue = "1") String currentPage,
+            @RequestParam(name = "pageSize", defaultValue = "5") String pageSize) {
+        List<String> orgIds = organizationService.getAllChildrenIdsByOrgId(org.getOrgId());
+        PageParameter page = new PageParameter(currentPage, pageSize);
+        Map<String, Object> map = new HashMap<>();
+        map.put("username", username);
+        map.put("isEnable", isEnable);
+        map.put("page", page);
+        map.put("orgIds", orgIds);
+        // 查询总记录数
+        int totalCount = userService.queryUsersCountsByOrgIds(map);
+        // 设置分页参数和总记录数
+        PageUtil.setPageParameter(page, totalCount);
+        List<User> users = userService.queryUsersByOrgIdsPageWithMap(map);
+        if (users.size() > 0) {
+            return JSON.toJSONString(Response.respose(MsgEnum.SUCCESS, users, page));
+        } else {
+            return JSON.toJSONString(Response.respose(MsgEnum.FAIL.getCode(), "没有查询到数据", users, page));
+        }
 
     }
 
@@ -148,25 +147,25 @@ public class UserController {
     @RequestMapping("/queryUserByPostIdPage")
     @ResponseBody
     public String queryUserByPostIdPage(Post post, @RequestParam(name = "username", defaultValue = "") String username,
-	    @RequestParam(name = "isEnable", defaultValue = "") String isEnable,
-	    @RequestParam(name = "currentPage", defaultValue = "1") String currentPage,
-	    @RequestParam(name = "pageSize", defaultValue = "5") String pageSize) {
-	PageParameter page = new PageParameter(currentPage, pageSize);
-	Map<String, Object> map = new HashMap<>();
-	map.put("postId", post.getPostId());
-	map.put("username", username);
-	map.put("isEnable", isEnable);
-	map.put("page", page);
-	// 查询总记录数
-	int totalCount = userService.queryCountByPostId(map);
-	// 设置分页参数和总记录数
-	PageUtil.setPageParameter(page, totalCount);
-	List<User> users = userService.queryUsersByPostId(map);
-	if (users.size() > 0) {
-	    return JSON.toJSONString(Response.respose(MsgEnum.SUCCESS, users, page));
-	} else {
-	    return JSON.toJSONString(Response.respose(MsgEnum.FAIL.getCode(), "没有查询到数据", users, page));
-	}
+            @RequestParam(name = "isEnable", defaultValue = "") String isEnable,
+            @RequestParam(name = "currentPage", defaultValue = "1") String currentPage,
+            @RequestParam(name = "pageSize", defaultValue = "5") String pageSize) {
+        PageParameter page = new PageParameter(currentPage, pageSize);
+        Map<String, Object> map = new HashMap<>();
+        map.put("postId", post.getPostId());
+        map.put("username", username);
+        map.put("isEnable", isEnable);
+        map.put("page", page);
+        // 查询总记录数
+        int totalCount = userService.queryCountByPostId(map);
+        // 设置分页参数和总记录数
+        PageUtil.setPageParameter(page, totalCount);
+        List<User> users = userService.queryUsersByPostId(map);
+        if (users.size() > 0) {
+            return JSON.toJSONString(Response.respose(MsgEnum.SUCCESS, users, page));
+        } else {
+            return JSON.toJSONString(Response.respose(MsgEnum.FAIL.getCode(), "没有查询到数据", users, page));
+        }
 
     }
 
@@ -183,55 +182,55 @@ public class UserController {
     @RequestMapping("/addUser")
     @ResponseBody
     public String addUser(User user, @RequestParam(name = "postId", defaultValue = "") String postId,
-	    @RequestParam(name = "groupId", defaultValue = "") String groupId,
-	    @RequestParam(name = "type", defaultValue = "") String type) throws Exception {
-	String jsonDataString = "";
-	if (user.getUserName() == "" || user.getUserName() == null) {
-	    jsonDataString = JSON.toJSONString(Response.fail("用户名不能为空！"));
-	}
-	Map<String, String> paramMap = new HashMap<>();
-	paramMap.put("postId", postId);
-	paramMap.put("groupId", groupId);
-	paramMap.put("type", type);
-	int updCount = 0;
-	updCount = userService.insert(user, paramMap);
-	if (updCount > 0) {
-	    User userFromServer = userService.queryById(user.getUserId());
-	    jsonDataString = JSON.toJSONString(Response.respose(MsgEnum.SUCCESS, userFromServer));
-	} else {
-	    jsonDataString = JSON.toJSONString(Response.fail());
-	}
+            @RequestParam(name = "groupId", defaultValue = "") String groupId,
+            @RequestParam(name = "type", defaultValue = "") String type) throws Exception {
+        String jsonDataString = "";
+        if (user.getUserName() == "" || user.getUserName() == null) {
+            jsonDataString = JSON.toJSONString(Response.fail("用户名不能为空！"));
+        }
+        Map<String, String> paramMap = new HashMap<>();
+        paramMap.put("postId", postId);
+        paramMap.put("groupId", groupId);
+        paramMap.put("type", type);
+        int updCount = 0;
+        updCount = userService.insert(user, paramMap);
+        if (updCount > 0) {
+            User userFromServer = userService.queryById(user.getUserId());
+            jsonDataString = JSON.toJSONString(Response.respose(MsgEnum.SUCCESS, userFromServer));
+        } else {
+            jsonDataString = JSON.toJSONString(Response.fail());
+        }
 
-	return jsonDataString;
+        return jsonDataString;
     }
 
     @RequestMapping("/updateUser")
     @ResponseBody
     public String updateUser(@RequestBody User user) throws Exception {
-	String msg;
-	user.setModifyTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+        String msg;
+        user.setModifyTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
 
-	int updateCount = userService.update(user);
-	if (updateCount > 0) {
-	    msg = JSON.toJSONString(Response.success("用户信息更新成功！"));
-	} else {
-	    msg = JSON.toJSONString(Response.fail("用户信息更新失败！"));
-	}
+        int updateCount = userService.update(user);
+        if (updateCount > 0) {
+            msg = JSON.toJSONString(Response.success("用户信息更新成功！"));
+        } else {
+            msg = JSON.toJSONString(Response.fail("用户信息更新失败！"));
+        }
 
-	return msg;
+        return msg;
     }
 
     @RequestMapping("/updatePassword")
     @ResponseBody
     public String updatePassword(@RequestParam(name = "userId", required = true) String userId,
-	    @RequestParam(name = "password", required = true) String password,
-	    @RequestParam(name = "newPassword", required = true) String newPassword) {
-	Map<String, String> result = userService.updatePassword(userId, password, newPassword);
-	if (result.get("code").equals("1")) {
-	    return JSON.toJSONString(Response.success(result.get("msg")));
-	} else {
-	    return JSON.toJSONString(Response.fail(result.get("msg")));
-	}
+            @RequestParam(name = "password", required = true) String password,
+            @RequestParam(name = "newPassword", required = true) String newPassword) {
+        Map<String, String> result = userService.updatePassword(userId, password, newPassword);
+        if (result.get("code").equals("1")) {
+            return JSON.toJSONString(Response.success(result.get("msg")));
+        } else {
+            return JSON.toJSONString(Response.fail(result.get("msg")));
+        }
     }
 
     /**
@@ -244,25 +243,25 @@ public class UserController {
     @RequestMapping("/resetPassword")
     @ResponseBody
     public String resetPassword(@RequestParam(name = "userId", required = true) String userId,
-	    @RequestParam(name = "userName", required = true) String userName) {
-	User user = new User();
-	user.setUserId(userId);
-	user.setPassword(EncryptionUtil.md5Encode("88888888"));
-	int result = userService.updatePasswordReset(user);
-	if (result > 0) {
-	    // 失败登录次数计数缓存
-	    Cache<String, AtomicInteger> attemptsCache = ehCacheManager.getCache("failLoginCount");
-	    // 限制登录时长计数缓存
-	    Cache<String, Date> limitTimer = ehCacheManager.getCache("limitTimer");
-	    String failLoginCountKey = "fail_login_attempts_" + userName;
-	    String limitTimerKey = "limit_login_timer_" + userName;
-	    // 密码重置成功，清除之前用户的登录失败信息记录
-	    attemptsCache.remove(failLoginCountKey);
-	    limitTimer.remove(limitTimerKey);
-	    return JSON.toJSONString(Response.success("密码已重置为：88888888，请通知【"+userName+"】尽快登录系统并修改密码！"));
-	} else {
-	    return JSON.toJSONString(Response.fail("密码重置失败！"));
-	}
+            @RequestParam(name = "userName", required = true) String userName) {
+        User user = new User();
+        user.setUserId(userId);
+        user.setPassword(EncryptionUtil.md5Encode("88888888"));
+        int result = userService.updatePasswordReset(user);
+        if (result > 0) {
+            // 失败登录次数计数缓存
+            Cache<String, AtomicInteger> attemptsCache = ehCacheManager.getCache("failLoginCount");
+            // 限制登录时长计数缓存
+            Cache<String, Date> limitTimer = ehCacheManager.getCache("limitTimer");
+            String failLoginCountKey = "fail_login_attempts_" + userName;
+            String limitTimerKey = "limit_login_timer_" + userName;
+            // 密码重置成功，清除之前用户的登录失败信息记录
+            attemptsCache.remove(failLoginCountKey);
+            limitTimer.remove(limitTimerKey);
+            return JSON.toJSONString(Response.success("密码已重置为：88888888，请通知【" + userName + "】尽快登录系统并修改密码！"));
+        } else {
+            return JSON.toJSONString(Response.fail("密码重置失败！"));
+        }
     }
 
     /**
@@ -275,100 +274,101 @@ public class UserController {
     @RequestMapping("/updateUserStatus")
     @ResponseBody
     public String updateUserStatus(@RequestBody User user) {
-	String msg;
-	user.setModifyTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
-	int updateCount = userService.updateUserStatus(user);
-	if (updateCount > 0) {
-	    msg = JSON.toJSONString(Response.success());
-	} else {
-	    msg = JSON.toJSONString(Response.fail());
-	}
-	return msg;
+        String msg;
+        user.setModifyTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+        int updateCount = userService.updateUserStatus(user);
+        if (updateCount > 0) {
+            msg = JSON.toJSONString(Response.success());
+        } else {
+            msg = JSON.toJSONString(Response.fail());
+        }
+        return msg;
     }
 
     @RequestMapping("/delUserById")
     @ResponseBody
     public String delUserById(String userId) {
-	String result = "";
-	try {
-	    int count = userService.deleteById(userId);
-	    if (count > 0) {
-		result = JSON.toJSONString(Response.success());
-	    } else {
-		result = JSON.toJSONString(Response.fail());
-	    }
-	} catch (Exception e) {
-	    result = JSON.toJSONString(e.getMessage());
-	    e.printStackTrace();
-	}
-	return result;
+        String result = "";
+        try {
+            int count = userService.deleteById(userId);
+            if (count > 0) {
+                result = JSON.toJSONString(Response.success());
+            } else {
+                result = JSON.toJSONString(Response.fail());
+            }
+        } catch (Exception e) {
+            result = JSON.toJSONString(e.getMessage());
+            e.printStackTrace();
+        }
+        return result;
     }
 
     @RequestMapping("/delUsersById")
     @ResponseBody
     public String delUsersById(@RequestParam(value = "userIds[]", defaultValue = "") List<String> userIds) {
 
-	String result = "";
-	int updUserCount = 0;
-	if (userIds.size() > 0) {
-	    try {
-		updUserCount = userService.deleteByIds(userIds);
-		if (updUserCount > 0) {
-		    result = JSON.toJSONString(Response.success("成功删除 " + updUserCount + " 条记录！"));
-		} else {
-		    result = JSON.toJSONString(Response.fail("删除失败！"));
-		}
-	    } catch (Exception e) {
-		result = JSON.toJSONString(Response.fail(e.getMessage()));
-		e.printStackTrace();
-	    }
+        String result = "";
+        int updUserCount = 0;
+        if (userIds.size() > 0) {
+            try {
+                updUserCount = userService.deleteByIds(userIds);
+                if (updUserCount > 0) {
+                    result = JSON.toJSONString(Response.success("成功删除 " + updUserCount + " 条记录！"));
+                } else {
+                    result = JSON.toJSONString(Response.fail("删除失败！"));
+                }
+            } catch (Exception e) {
+                result = JSON.toJSONString(Response.fail(e.getMessage()));
+                e.printStackTrace();
+            }
 
-	} else {
-	    result = JSON.toJSONString(Response.fail("没有选择用户 或者 超级管理员不能删除！"));
-	}
+        } else {
+            result = JSON.toJSONString(Response.fail("没有选择用户 或者 超级管理员不能删除！"));
+        }
 
-	return result;
+        return result;
     }
 
     @RequestMapping("/queryUserById")
     @ResponseBody
     public String queryUserById(String userId) {
-	String jsonDataString = "";
-	User user = userService.queryById(userId);
-	if (user != null) {
-	    jsonDataString = JSON.toJSONString(Response.respose(MsgEnum.SUCCESS, user));
-	} else {
-	    jsonDataString = JSON.toJSONString(Response.respose(MsgEnum.FAIL, user));
-	}
-	return jsonDataString;
+        String jsonDataString = "";
+        User user = userService.queryById(userId);
+        if (user != null) {
+            jsonDataString = JSON.toJSONString(Response.respose(MsgEnum.SUCCESS, user));
+        } else {
+            jsonDataString = JSON.toJSONString(Response.respose(MsgEnum.FAIL, user));
+        }
+        return jsonDataString;
     }
 
     @RequestMapping("/addUserPostMapping")
     @ResponseBody
     public String addUserPostMapping(@RequestParam(name = "userId", defaultValue = "") String userId,
-	    @RequestParam(name = "postId", defaultValue = "") String postId) {
-	String jsonDataString = "";
-	Map<String, String> paramMap = new HashMap<>();
-	paramMap.put("userId", userId);
-	paramMap.put("postId", postId);
-	int count = userService.addUserPostMapping(paramMap);
-	if (count > 0) {
-	    jsonDataString = JSON.toJSONString(Response.success("成功新增一条<用户-职位>映射记录！"));
-	} else {
-	    jsonDataString = JSON.toJSONString(Response.fail("<用户-职位>映射记录添加失败！"));
-	}
-	return jsonDataString;
+            @RequestParam(name = "postId", defaultValue = "") String postId) {
+        String jsonDataString = "";
+        Map<String, String> paramMap = new HashMap<>();
+        paramMap.put("userId", userId);
+        paramMap.put("postId", postId);
+        int count = userService.addUserPostMapping(paramMap);
+        if (count > 0) {
+            jsonDataString = JSON.toJSONString(Response.success("成功新增一条<用户-职位>映射记录！"));
+        } else {
+            jsonDataString = JSON.toJSONString(Response.fail("<用户-职位>映射记录添加失败！"));
+        }
+        return jsonDataString;
     }
 
+//    @RequiresPermissions("document:read") //shiro注解测试
     @RequestMapping("/queryUserDetail")
     @ResponseBody
-    public String queryUserDetail(@RequestParam(name = "userId", required = true) String userId) {
-	List<User> queryUserDetail = userService.queryUserDetail(userId);
-	if (queryUserDetail.size() > 0) {
-	    return JSON.toJSONString(Response.success(queryUserDetail));
-	} else {
-	    return JSON.toJSONString(Response.fail(queryUserDetail));
-	}
+    public String queryUserDetail(User user) {
+        List<User> queryUserDetail = userService.queryUserDetail(user);
+        if (queryUserDetail.size() > 0) {
+            return JSON.toJSONString(Response.success(queryUserDetail));
+        } else {
+            return JSON.toJSONString(Response.fail(queryUserDetail));
+        }
     }
 
 }

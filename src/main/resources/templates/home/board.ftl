@@ -25,7 +25,7 @@
 											<div class="layui-row">
 												<div class="layui-col-md12" style="margin:20px 0px;">
 													<span
-														style="font-size: 45px; font-weight: bold; "><shiro:principal /></span>
+														style="font-size: 45px; font-weight: bold; "><@shiro.principal/></span>
 												</div>
 												<div class="layui-col-md12" style="margin:10px 0px;">
 													<span

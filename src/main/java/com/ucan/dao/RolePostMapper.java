@@ -6,6 +6,8 @@ import com.ucan.base.BaseDao;
 import com.ucan.entity.RolePost;
 
 /**
+ * <角色-职位> 映射持久层
+ * 
  * @author liming.cen
  * @date 2022年12月24日 下午5:16:19
  */

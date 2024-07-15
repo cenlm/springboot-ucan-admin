@@ -30,14 +30,14 @@ body {
 	border-radius: 20px 20px 20px 20px;
 	box-shadow: 5px 3px 5px 5px #3A4E7E;
 	opacity: 0.6;
-	 margin: 230px 0; 
+	margin: 230px 0;
 	/* margin: 30.5vh 0; */
 	position: absolute;
 }
 
 #formHeader {
 	position: absolute;
-	 margin-top: 290px; 
+	margin-top: 290px;
 	/* margin-top: 39vh; */
 	width: 100%;
 	left: 0px;
@@ -67,10 +67,10 @@ body {
 
 form {
 	position: absolute;
-	 margin-top: 320px; 
+	margin-top: 320px;
 	/* margin-top: 44vh; */
 	/* left: 20px; */
-	left:1vw;
+	left: 1vw;
 }
 
 input[type='text'] {
@@ -103,6 +103,7 @@ input[type='password'] {
 </style>
 </head>
 <body>
+	<#assign contextPath="${request.contextPath}" />
 	<div class="layui-fluid">
 		<div class="layui-row">
 			<div
@@ -140,10 +141,10 @@ input[type='password'] {
 										class="layui-input">
 								</div>
 							</div>
-							<div class="layui-form-item" >
+							<div class="layui-form-item">
 								<div class="layui-input-inline" id="rememberMe">
 									<input type="checkbox" name="rememberMe" value="true"
-										lay-skin="primary" title="记住我？" >
+										lay-skin="primary" title="记住我？">
 								</div>
 							</div>
 							<div class="layui-form-item">
@@ -163,9 +164,8 @@ input[type='password'] {
 	<script src="js/jquery-3.6.3.min.js"></script>
 	<script src="js/login/login.js"></script>
 	<script type="text/javascript">
-	   var contextPath="${request.contextPath}";
-	  
-	    window.onload = function() {
+		var contextPath = "${contextPath}";
+                window.onload = function() {
 	                let url = document.location.href;
 	                if (url.indexOf("yes") == -1) {
 		                let t = new Date();
@@ -174,7 +174,7 @@ input[type='password'] {
 			                top.document.location.reload();
 		                }
 	                }
-                }  
+                }
 	</script>
 </body>
 </html>

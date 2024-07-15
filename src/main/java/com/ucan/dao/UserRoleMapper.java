@@ -13,9 +13,6 @@ import com.ucan.entity.UserRole;
  */
 public interface UserRoleMapper extends BaseDao<UserRole> {
 
-//    List<UserRole> queryByPage(String userId);
-//
-//    int queryUserRoleCounts(String userId);
     /**
      * 通过用户Id查询角色
      * 

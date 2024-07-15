@@ -21,7 +21,7 @@ import com.ucan.entity.tree.response.Status;
 import com.ucan.entity.tree.status.PermissionNodeStatus;
 import com.ucan.exception.CustomException;
 import com.ucan.service.IPermissionService;
-import com.ucan.utils.UUIDUtil;
+import com.ucan.util.UUIDUtil;
 
 /**
  * 权限信息服务实现类

@@ -22,7 +22,7 @@ import com.ucan.entity.tree.response.Status;
 import com.ucan.entity.tree.status.OrgNodeStatus;
 import com.ucan.exception.CustomException;
 import com.ucan.service.IOrganizationService;
-import com.ucan.utils.UUIDUtil;
+import com.ucan.util.UUIDUtil;
 
 /**
  * @Description: 组织信息服务类

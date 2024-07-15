@@ -17,7 +17,7 @@ public interface OrganizationMapper extends BaseDao<Organization> {
      * 
      * @return
      */
-    public List<Organization> queryAllOrganizations();
+    List<Organization> queryAllOrganizations();
 
     /**
      * 查找当前节点的直接子节点orgId
@@ -25,7 +25,7 @@ public interface OrganizationMapper extends BaseDao<Organization> {
      * @param parentId
      * @return
      */
-    public List<Organization> queryOrgIdsByParentId(String parentId);
+    List<Organization> queryOrgIdsByParentId(String parentId);
 
     /**
      * 通过orgId查询组织名称
@@ -33,5 +33,5 @@ public interface OrganizationMapper extends BaseDao<Organization> {
      * @param orgId
      * @return
      */
-    public String getOrgNameById(String orgId);
+    String getOrgNameById(String orgId);
 }

@@ -17,7 +17,7 @@ public interface IOrganizationService {
      * @param org
      * @return
      */
-    public int addOrganization(Organization org) throws Exception;
+    int addOrganization(Organization org) throws Exception;
 
     /**
      * 修改组织名称
@@ -33,7 +33,7 @@ public interface IOrganizationService {
      * @param org
      * @return
      */
-    public int deleteOrganization(Organization org) throws Exception;
+    int deleteOrganization(Organization org) throws Exception;
 
     /**
      * 获取某个组织结构节点的所有子孙节点orgId（包括当前节点的orgId）

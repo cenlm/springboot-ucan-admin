@@ -18,7 +18,7 @@ public interface PostMapper extends BaseDao<Post> {
      * @param orgId
      * @return
      */
-    public List<Post> queryPostsByOrgId(String orgId);
+    List<Post> queryPostsByOrgId(String orgId);
 
     /**
      * 获取职位名称
@@ -26,14 +26,14 @@ public interface PostMapper extends BaseDao<Post> {
      * @param postId
      * @return
      */
-    public String getPostNameById(String postId);
+    String getPostNameById(String postId);
 
     /**
      * 统计职位节点子节点个数
      * 
      * @return
      */
-    public int queryPostCountByParentId(String parentId);
+    int queryPostCountByParentId(String parentId);
 
     /**
      * 通过职位id统计<职位-用户>记录数
@@ -41,7 +41,7 @@ public interface PostMapper extends BaseDao<Post> {
      * @param postId
      * @return
      */
-    public int queryUserPostCountByPostId(String postId);
+    int queryUserPostCountByPostId(String postId);
 
     /**
      * 通过userId获取<用户-职位>映射记录
