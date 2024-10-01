@@ -473,4 +473,20 @@
 
 		});
 	});
+    
+    //解决工具条过多隐藏后点击事件失效的问题
+             $(document).off('mousedown', '.layui-table-grid-down').on('mousedown', '.layui-table-grid-down', function(event) {
+                 table._tableTrCurrr = $(this).closest('td');
+             });
+             $(document).off('click', '.layui-table-tips-main [lay-event]').on('click', '.layui-table-tips-main [lay-event]', function(event) {
+                 var elem = $(this);
+                 var tableTrCurrr = table._tableTrCurrr;
+                 if (!tableTrCurrr) { return; }
+                 var layerIndex = elem.closest('.layui-table-tips').attr('times');
+                 /* console.log(layerIndex);*/
+                 layer.close(layerIndex);
+                 $('a[lay-event="' + elem.attr('lay-event') + '"]')[0].click();
+                 /*table._tableTrCurrr.find('[lay-event="' + elem.attr('lay-event') + '"]').children("i").first().click();*/
+             });
+    
 });
