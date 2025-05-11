@@ -162,6 +162,8 @@ input[type='password'] {
 	</div>
 	<script src="js/layui/layui.js"></script>
 	<script src="js/jquery-3.6.3.min.js"></script>
+    <script src="js/xss/purify-3.2.5.min.js"></script>
+	<script src="js/xss/xss-scanner.js"></script>   
 	<script src="js/login/login.js"></script>
 	<script type="text/javascript">
 		var contextPath = "${contextPath}";

@@ -1,5 +1,7 @@
 package com.ucan.controller.system;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -7,15 +9,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.apache.shiro.authz.annotation.RequiresPermissions;
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.shiro.cache.Cache;
 import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson2.JSON;
 import com.ucan.base.response.MsgEnum;
@@ -209,7 +211,6 @@ public class UserController {
     public String updateUser(@RequestBody User user) throws Exception {
         String msg;
         user.setModifyTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
-
         int updateCount = userService.update(user);
         if (updateCount > 0) {
             msg = JSON.toJSONString(Response.success("用户信息更新成功！"));
@@ -218,6 +219,44 @@ public class UserController {
         }
 
         return msg;
+    }
+
+    /**
+     * （user_setting.ftl页面）进行文件上传测试
+     * 
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @PostMapping("/upload")
+    public String upload(@RequestParam("file") MultipartFile file, @RequestParam("description") String description,
+            Model model, HttpServletRequest request) {
+        if (!file.isEmpty()) {
+            try {
+                // 获取文件名，防止路径遍历攻击（如 ../../etc/passwd）
+                String fileName = file.getOriginalFilename().replaceAll("[^a-zA-Z0-9.-]", "_");
+                //获取根目录绝对路径
+                String appRoot = request.getServletContext().getRealPath("/");
+                // 保存文件到服务器
+                String uploadDir = "/uploads/";
+                File dest = new File(appRoot + uploadDir + fileName);
+                File parentDir = dest.getParentFile();
+                if (!parentDir.exists()) {// 目录不存在，先创建目录
+                    boolean dirCreated = parentDir.mkdir();
+                    if (!dirCreated) {
+                        throw new IOException("Failed to create directory: " + parentDir.getAbsolutePath());
+                    }
+                }
+                file.transferTo(dest);
+                System.out.println("文件上传路径：" + parentDir.getAbsolutePath());
+                model.addAttribute("message", "文件上传成功：" + fileName);
+            } catch (IOException e) {
+                model.addAttribute("message", "文件上传失败：" + e.getMessage());
+            }
+        } else {
+            model.addAttribute("message", "文件为空");
+        }
+        return "result";
     }
 
     @RequestMapping("/updatePassword")

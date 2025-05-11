@@ -570,9 +570,8 @@
 						 data-max="500" data-min="0" data-step="5">
 			</div>
 		</div>
-		
-	
 	</form>
-
+    <script src="../js/xss/purify-3.2.5.min.js"></script>
+    <script src="../js/xss/xss-scanner.js"></script>
 </body>
 </html>

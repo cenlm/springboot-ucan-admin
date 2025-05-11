@@ -15,6 +15,8 @@
 <script src="../js/layui/layui.js"></script>
 <script src="../js/jquery-3.6.3.min.js"></script>
 <script src="../js/jquery-migrate-1.2.1.min.js"></script>
+<script src="../js/xss/purify-3.2.5.min.js"></script>
+<script src="../js/xss/xss-scanner.js"></script>
 <script src="../js/role_list.js"></script>
 
 </head>

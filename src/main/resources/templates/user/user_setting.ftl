@@ -216,9 +216,17 @@ element.style {
 		</div>
 	</div>
 
+<!-- <form action="${request.contextPath}/user/upload" method="POST" enctype="multipart/form-data">
+    <input type="text" name="description" placeholder="文件描述" required>
+    <input type="file" name="file" accept=".jpg,.png" required>
+    <button type="submit">安全上传</button>
+</form> -->
+
 	<script src="../js/layui/layui.js"></script>
 	<script src="../js/jquery-3.6.3.min.js"></script>
 	<script src="../js/jquery-migrate-1.2.1.min.js"></script>
+	<script src="../js/xss/purify-3.2.5.min.js"></script>
+    <script src="../js/xss/xss-scanner.js"></script>  
 	<script type="text/javascript">
 		layui.use([ 'form' ] , function() {
 	                var form = layui.form;
