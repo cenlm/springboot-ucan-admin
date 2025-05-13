@@ -16,10 +16,15 @@ import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson2.JSON;
+import com.ucan.annotation.XssClean;
 import com.ucan.base.response.MsgEnum;
 import com.ucan.base.response.Response;
 import com.ucan.entity.Organization;
@@ -59,7 +64,7 @@ public class UserController {
     public String toUserSetting() {
         return "user/user_setting";
     }
-
+    @XssClean
     @RequestMapping("/queryUserByPage")
     @ResponseBody
     public String queryUserByPage(User user, @RequestParam(name = "currentPage", defaultValue = "1") String currentPage,
@@ -109,6 +114,7 @@ public class UserController {
      * @param pageSize
      * @return
      */
+    @XssClean
     @RequestMapping("/queryUserByOrgIdPage")
     @ResponseBody
     public String queryUserByOrgIdPage(Organization org,
@@ -146,6 +152,7 @@ public class UserController {
      * @param pageSize
      * @return
      */
+    @XssClean
     @RequestMapping("/queryUserByPostIdPage")
     @ResponseBody
     public String queryUserByPostIdPage(Post post, @RequestParam(name = "username", defaultValue = "") String username,
@@ -181,6 +188,7 @@ public class UserController {
      * @return
      * @throws Exception
      */
+    @XssClean
     @RequestMapping("/addUser")
     @ResponseBody
     public String addUser(User user, @RequestParam(name = "postId", defaultValue = "") String postId,
@@ -205,7 +213,7 @@ public class UserController {
 
         return jsonDataString;
     }
-
+    @XssClean
     @RequestMapping("/updateUser")
     @ResponseBody
     public String updateUser(@RequestBody User user) throws Exception {
@@ -258,7 +266,7 @@ public class UserController {
         }
         return "result";
     }
-
+    @XssClean
     @RequestMapping("/updatePassword")
     @ResponseBody
     public String updatePassword(@RequestParam(name = "userId", required = true) String userId,
@@ -279,6 +287,7 @@ public class UserController {
      * @param userName
      * @return
      */
+    @XssClean
     @RequestMapping("/resetPassword")
     @ResponseBody
     public String resetPassword(@RequestParam(name = "userId", required = true) String userId,
@@ -309,7 +318,7 @@ public class UserController {
      * @param user
      * @return
      */
-
+    @XssClean
     @RequestMapping("/updateUserStatus")
     @ResponseBody
     public String updateUserStatus(@RequestBody User user) {
@@ -380,7 +389,7 @@ public class UserController {
         }
         return jsonDataString;
     }
-
+    @XssClean
     @RequestMapping("/addUserPostMapping")
     @ResponseBody
     public String addUserPostMapping(@RequestParam(name = "userId", defaultValue = "") String userId,
@@ -399,6 +408,7 @@ public class UserController {
     }
 
 //    @RequiresPermissions("document:read") //shiro注解测试
+    @XssClean
     @RequestMapping("/queryUserDetail")
     @ResponseBody
     public String queryUserDetail(User user) {

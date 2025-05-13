@@ -7,7 +7,6 @@ import java.util.Objects;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.session.mgt.eis.SessionDAO;
 import org.apache.shiro.subject.PrincipalCollection;
@@ -15,8 +14,6 @@ import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.subject.support.DefaultSubjectContext;
 import org.java_websocket.WebSocket;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson2.JSON;
+import com.ucan.annotation.XssClean;
 import com.ucan.base.response.Response;
 import com.ucan.entity.User;
 import com.ucan.service.IUserService;
@@ -40,7 +38,6 @@ import com.ucan.websocket.SocketServerManager;
  */
 @Controller
 public class LoginController {
-    private static Logger log = LoggerFactory.getLogger(LoginController.class);
     @Autowired
     private IUserService userService;
     @Autowired
@@ -61,7 +58,8 @@ public class LoginController {
         }
 
     }
-   
+
+    @XssClean
     @RequestMapping("/login")
     @ResponseBody
     public String login(@RequestParam(name = "username", required = true, defaultValue = "") String username,

@@ -243,7 +243,8 @@ element.style {
 		                var formData = form.val('updPassword');
 		                if (formData.newPassword != formData.confirmPassword) {
 			                layer.msg("两次输入的新密码不一致！" , {
-				                icon : 5
+				                icon : 5,
+				                anim: 6
 			                });
 			                return;
 		                }
@@ -270,7 +271,8 @@ element.style {
 		                        } ,
 		                        error : function(e) {
 			                        layer.msg(e.responseText , {
-				                        icon : 2
+				                        icon : 2,
+				                        anim: 6
 			                        });
 		                        }
 		                });

@@ -658,6 +658,7 @@ $("#updateOrg input[name='icon']").next().find("div[class='layui-ext-icon-select
 					limits: [5, 10, 20, 30, 50]
 
 				},
+                method: 'post',
 				request: { //自定义请求中的分页参数名称
 					pageName: 'currentPage', //页码的参数名称，默认：page
 					limitName: 'pageSize' //每页数据量的参数名，默认：limit
@@ -1543,6 +1544,7 @@ $("#updateOrg input[name='icon']").next().find("div[class='layui-ext-icon-select
 				limits: [5, 10, 20, 30, 50]
 
 			},
+            method:'post',
 			request: { //自定义请求中的分页参数名称
 				pageName: 'currentPage', //页码的参数名称，默认：page
 				limitName: 'pageSize' //每页数据量的参数名，默认：limit

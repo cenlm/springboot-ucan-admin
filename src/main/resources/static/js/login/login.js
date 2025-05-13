@@ -26,6 +26,7 @@ layui.use(['form'], function() {
 				    layer.close(loadIndex);
 					layer.msg(result.msg, {
 						icon: 5,
+                        anim: 6,
 						offset: [$(window).height() - 480, $(window).width() - 890]
 					});
 				}

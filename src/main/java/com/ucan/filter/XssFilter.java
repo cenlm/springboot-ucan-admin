@@ -16,28 +16,43 @@ import javax.servlet.http.HttpServletRequest;
 import com.ucan.req.XssRequestWrapper;
 
 /**
- * @Description: XSS攻击过滤器，非HEAD、OPTIONS、文件上传 请求都要进行数据清洗
+ * 
+ * @Description:已废弃！改为 自定义注解 + AOP环绕通知进行更精细的Xss数据清洗<br>
+ *                     XSS攻击过滤器，非HEAD、OPTIONS、文件上传 请求都要进行数据清洗<br>
+ * 
  * @author liming.cen
  * @date 2025-04-20 16:28:51
  * 
  */
+@Deprecated
 public class XssFilter implements Filter {
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-            throws IOException, ServletException {
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
 
         String contentType = httpServletRequest.getContentType();
-        // HEAD、OPTIONS、文件上传 请求，不用进行XSS过滤
-        if (!Objects.isNull(contentType) && ("HEAD".equalsIgnoreCase(httpServletRequest.getMethod())
-                || "OPTIONS".equalsIgnoreCase(httpServletRequest.getMethod())
-                || contentType.startsWith("multipart/form-data"))) {
-            chain.doFilter(request, response);
-            return;
-        }else {//XSS过滤
-            HttpServletRequest wrappedRequest = new XssRequestWrapper((HttpServletRequest) request);
+        String method = httpServletRequest.getMethod();
+        String requestURI = httpServletRequest.getRequestURI();
+        System.out.println("method:" + method + " requestUrI:" + requestURI + " contentType:" + contentType);
+      
+        // GET、POST（且不为文件上传操作）、PUT、PATCH、DELETE请求，进行XSS过滤
+        if ("GET".equalsIgnoreCase(httpServletRequest.getMethod())
+                || ("POST".equalsIgnoreCase(httpServletRequest.getMethod())
+                        && !contentType.startsWith("multipart/form-data"))
+                || "PUT".equalsIgnoreCase(httpServletRequest.getMethod())
+                || "PATCH".equalsIgnoreCase(httpServletRequest.getMethod())
+                || "DELETE".equalsIgnoreCase(httpServletRequest.getMethod())) {
+            HttpServletRequest wrappedRequest = null;
+            try {
+                wrappedRequest = new XssRequestWrapper((HttpServletRequest) request);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             chain.doFilter(wrappedRequest, response);
+//            chain.doFilter(request, response);
+        } else {// 不进行XSS过滤，直接进入下一个过滤器
+            chain.doFilter(request, response);
         }
     }
 

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson2.JSON;
+import com.ucan.annotation.XssClean;
 import com.ucan.base.response.Response;
 import com.ucan.entity.Post;
 import com.ucan.entity.tree.node.PostTreeNode;
@@ -39,12 +40,12 @@ public class PostController {
 	return JSON.toJSONString(response);
     }
 
-    /**
-     * 角色已分配的职位信息查询（职位信息树）
-     * 
-     * @param orgId
-     * @return
-     */
+   /**
+    * 角色已分配的职位信息查询（职位信息树）
+    * @param orgId
+    * @param roleId
+    * @return
+    */
     @RequestMapping("/getRoleToPostTree")
     @ResponseBody
     public String getRoleToPostTree(@RequestParam(name = "orgId", defaultValue = "0") String orgId,
@@ -52,7 +53,7 @@ public class PostController {
 	DTreeResponse response = rolePostService.getRoleToPostTree(orgId, roleId);
 	return JSON.toJSONString(response);
     }
-
+    @XssClean
     @RequestMapping("/addPost")
     @ResponseBody
     public String addPost(Post post) throws Exception {
@@ -64,7 +65,7 @@ public class PostController {
 		return JSON.toJSONString(Response.fail("职位新增失败！"));
 	    }
     }
-
+    @XssClean
     @RequestMapping("/updatePost")
     @ResponseBody
     public String updatePost(Post post) {

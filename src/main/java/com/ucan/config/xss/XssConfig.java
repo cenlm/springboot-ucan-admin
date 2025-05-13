@@ -12,7 +12,7 @@ import com.ucan.filter.XssFilter;
  * @date 2025-04-20 16:38:28
  * 
  */
-@Configuration
+//@Configuration
 public class XssConfig {
 
     @Bean

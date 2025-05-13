@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson2.JSON;
+import com.ucan.annotation.XssClean;
 import com.ucan.base.response.MsgEnum;
 import com.ucan.base.response.Response;
 import com.ucan.entity.MutexRole;
@@ -57,6 +58,7 @@ public class RoleController {
      * @return
      * @throws Exception 
      */
+    @XssClean
     @RequestMapping("/addRole")
     @ResponseBody
     public String addRole(Role role) throws Exception {
@@ -82,6 +84,7 @@ public class RoleController {
      * @return
      * @throws Exception 
      */
+    @XssClean
     @RequestMapping("/deleteRole")
     @ResponseBody
     public String deleteRole(@RequestParam(name = "roleId") String roleId,
@@ -109,6 +112,7 @@ public class RoleController {
      * @return
      * @throws Exception 
      */
+    @XssClean
     @RequestMapping("/updateRole")
     @ResponseBody
     public String updateRole(Role role) throws Exception {
@@ -172,6 +176,7 @@ public class RoleController {
      * @param pageSize
      * @return
      */
+    @XssClean
     @RequestMapping("/queryRoleUsersByPage")
     @ResponseBody
     public String queryRoleUsersByPage(UserRole userRole,
@@ -196,6 +201,7 @@ public class RoleController {
      * @param pageSize
      * @return
      */
+    @XssClean
     @RequestMapping("/getMutexRolesByPage")
     @ResponseBody
     public String getMutexRolesByPage(MutexRole mutexRole,
@@ -220,6 +226,7 @@ public class RoleController {
      * @param pageSize
      * @return
      */
+    @XssClean
     @RequestMapping("/deleteMutexRole")
     @ResponseBody
     public String deleteMutexRole(MutexRole mutexRole) {
@@ -239,6 +246,7 @@ public class RoleController {
      * @param pageSize
      * @return
      */
+    @XssClean
     @RequestMapping("/addMutexRole")
     @ResponseBody
     public String addMutexRole(MutexRole mutexRole) {
@@ -262,6 +270,7 @@ public class RoleController {
      * @return
      * @throws Exception 
      */
+//    @XssClean
     @RequestMapping("/updateRolePermissionRelation")
     @ResponseBody
     public String updateRolePermissionRelation(@RequestParam(name = "roleId", defaultValue = "") String roleId,
@@ -286,6 +295,7 @@ public class RoleController {
      * @return
      * @throws Exception 
      */
+//    @XssClean
     @RequestMapping("/updateRoleOrgPostRelation")
     @ResponseBody
     public String updateRoleOrgPostRelation(@RequestParam(name = "roleId", defaultValue = "") String roleId,

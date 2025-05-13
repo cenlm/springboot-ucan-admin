@@ -10,9 +10,11 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -24,7 +26,9 @@ import javax.servlet.http.HttpServletRequestWrapper;
 import com.ucan.util.xss.XssFilterUtil;
 
 /**
- * @Description: 自定义RequestWrapper（使用OWASP Java Encoder），供XssFilter使用<br>
+ * @Description: 已废弃，仅作为理解HttpServletRequestWrapper包装类和Spring MVC传参处理逻辑使用<br>
+ * 
+ *               自定义RequestWrapper（使用OWASP Java Encoder），供XssFilter使用<br>
  *               <br>
  *               SpringMVC在参数绑定过程中，主要依赖 ServletRequest的以下方法：<br>
  * 
@@ -39,10 +43,11 @@ import com.ucan.util.xss.XssFilterUtil;
  * @date 2025-04-20 16:31:51
  * 
  */
+@Deprecated
 public class XssRequestWrapper extends HttpServletRequestWrapper {
 
     private final byte[] cachedBody;
-    private final Map<String, String[]> parameterMap;
+    private final Map<String, ArrayList<String>> parameterMap;
 
     /**
      * 请求包装类构造方法
@@ -50,7 +55,7 @@ public class XssRequestWrapper extends HttpServletRequestWrapper {
      * @param request
      * @throws IOException
      */
-    public XssRequestWrapper(HttpServletRequest request) throws IOException {
+    public XssRequestWrapper(HttpServletRequest request) throws Exception {
         super(request);
         this.cachedBody = readAndProcessBody(request);
         // 解析表单数据到参数集合
@@ -64,9 +69,11 @@ public class XssRequestWrapper extends HttpServletRequestWrapper {
      * @return
      * @throws IOException
      */
-    private byte[] readAndProcessBody(HttpServletRequest request) throws IOException {
+    private byte[] readAndProcessBody(HttpServletRequest request) throws Exception {
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
         String processed = "";
+        @SuppressWarnings("unused")
+        String requestURI = request.getRequestURI();
         try {
             // 读取原始请求数据字节流
             InputStream inputStream = request.getInputStream();
@@ -172,13 +179,24 @@ public class XssRequestWrapper extends HttpServletRequestWrapper {
 
     @Override
     public String getParameter(String name) {
-        String[] values = parameterMap.get(name);
-        return values != null && values.length > 0 ? values[0] : null;
+        ArrayList<String> paramValues = parameterMap.get(name);
+        return paramValues != null && paramValues.size() > 0 ? paramValues.get(0) : null;
     }
 
     @Override
     public Map<String, String[]> getParameterMap() {
-        return parameterMap;
+        // parameterMap=Map<String, ArrayList<String>>();
+        Map<String, String[]> paramMap = new LinkedHashMap<String, String[]>();
+        parameterMap.forEach((k, v) -> {
+            String[] value;
+            if (Objects.isNull(v)) {
+                value = null;
+            } else {
+                value = (String[]) v.toArray();
+            }
+            paramMap.put(k, value);
+        });
+        return paramMap;
     }
 
     @Override
@@ -188,14 +206,29 @@ public class XssRequestWrapper extends HttpServletRequestWrapper {
 
     @Override
     public String[] getParameterValues(String name) {
-        return parameterMap.get(name);
+        ArrayList<String> paramValues = parameterMap.get(name);
+        if (Objects.isNull(paramValues) || paramValues.size() == 0) {
+            return null;
+        } else {
+
+            String[] strArray = new String[paramValues.size()];
+            for (int i = 0; i < strArray.length; i++) {
+                // 将列表元素放入到strArray
+                if (paramValues.get(i) != null) {
+                    strArray[i] = paramValues.get(i);
+                } else {
+                    strArray[i] = ""; // 处理 null 值
+                }
+            }
+            return strArray;
+        }
     }
 
     /**
-     * 解析经过XSS过滤处理的表单数据，重新拼接参数（application/x-www-form-urlencoded）
+     * 解析经过XSS过滤处理的数据，参考org.apache.tomcat.util.http.Parameters#addParameter(k,v)
      */
-    private Map<String, String[]> parseFormData() {
-        Map<String, String[]> params = new HashMap<>();
+    private Map<String, ArrayList<String>> parseFormData() {
+        Map<String, ArrayList<String>> paramHashValues = new LinkedHashMap<>();
         try {
             String body = new String(cachedBody, getCharacterEncoding());
             // 手动解析键值对，例如：name=John&age=20
@@ -205,13 +238,13 @@ public class XssRequestWrapper extends HttpServletRequestWrapper {
                 if (kv.length == 2) {
                     String key = URLDecoder.decode(kv[0], getCharacterEncoding());
                     String value = URLDecoder.decode(kv[1], getCharacterEncoding());
-                    params.put(key, new String[] { value });
+                    paramHashValues.computeIfAbsent(key, k -> new ArrayList<>(1)).add(value);
                 }
             }
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException("Failed to parse form data", e);
         }
-        return params;
+        return paramHashValues;
     }
 
 }
